@@ -1,0 +1,416 @@
+// Dados de profissões e especialidades para o onboarding e filtros
+export const professionCategories = {
+  "Design e Criativos": {
+    icon: "🎨",
+    specialties: [
+      "Designer Gráfico",
+      "Designer UX/UI", 
+      "Designer de Produto",
+      "Motion Designer",
+      "Ilustrador(a)",
+      "Diretor(a) de Arte",
+      "3D Artist"
+    ],
+    skills: [
+      "Photoshop",
+      "Illustrator",
+      "Figma",
+      "Sketch",
+      "Adobe XD",
+      "After Effects",
+      "Premiere Pro",
+      "Canva",
+      "CorelDraw",
+      "InDesign",
+      "Blender",
+      "Cinema 4D",
+      "UI Design",
+      "UX Design",
+      "Design Thinking",
+      "Prototipagem"
+    ]
+  },
+  "Programação e Tecnologia": {
+    icon: "💻",
+    specialties: [
+      "Gerente de projetos",
+      "Programador(a)",
+      "Desenvolvedor(a) Web",
+      "Desenvolvedor(a) Mobile",
+      "Dados & Analytics",
+      "IA para Programação e Tecnologia",
+      "DevOps",
+      "QA/Tester",
+      "Arquiteto de Software"
+    ],
+    skills: [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Vue.js",
+      "Angular",
+      "Node.js",
+      "Python",
+      "Django",
+      "Flask",
+      "Java",
+      "Spring Boot",
+      "PHP",
+      "Laravel",
+      "C#",
+      ".NET",
+      "Swift",
+      "Kotlin",
+      "Flutter",
+      "React Native",
+      "SQL",
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
+      "Redis",
+      "AWS",
+      "Azure",
+      "Google Cloud",
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "Git",
+      "Scrum",
+      "Agile"
+    ]
+  },
+  "Marketing e Vendas": {
+    icon: "📈",
+    specialties: [
+      "Gestor(a) de tráfego",
+      "Marketing Digital",
+      "Vendas", 
+      "Consultor(a)",
+      "Coprodutor | Gestor de Marketing Digital",
+      "Social Media",
+      "SEO Specialist",
+      "Growth Hacker"
+    ],
+    skills: [
+      "Google Ads",
+      "Facebook Ads",
+      "Instagram Ads",
+      "LinkedIn Ads",
+      "TikTok Ads",
+      "Google Analytics",
+      "SEO",
+      "SEM",
+      "E-mail marketing",
+      "Content Marketing",
+      "Inbound Marketing",
+      "Growth Hacking",
+      "Copywriting",
+      "Storytelling",
+      "Funil de vendas",
+      "Analytics",
+      "ROI",
+      "Pixel",
+      "Google Tag Manager",
+      "Remarketing",
+      "Estratégia de lançamento",
+      "Estratégia de branding"
+    ]
+  },
+  "Conteúdo e Tradução": {
+    icon: "✍️",
+    specialties: [
+      "Copywriter",
+      "Redator(a)",
+      "Tradutor(a)",
+      "Revisor(a)",
+      "Roteirista",
+      "Ghost Writer",
+      "Editor(a) de Vídeo",
+      "Produtor(a) de Conteúdo"
+    ],
+    skills: [
+      "Copy de vendas",
+      "Headlines",
+      "Storytelling",
+      "E-mail marketing",
+      "Landing pages",
+      "VSL",
+      "Scripts",
+      "Copywriting Persuasivo",
+      "SEO",
+      "Blog posts",
+      "Artigos",
+      "Revisão",
+      "Conteúdo para redes",
+      "E-books",
+      "Ghostwriting",
+      "Escrita Criativa",
+      "Roteiros",
+      "Inglês",
+      "Espanhol",
+      "Francês",
+      "Alemão",
+      "Italiano"
+    ]
+  },
+  "Assistência Administrativa": {
+    icon: "📊",
+    specialties: [
+      "Suporte",
+      "Assistente Virtual",
+      "BPO Financeiro",
+      "Secretária(o)",
+      "Recepcionista",
+      "Auxiliar Administrativo",
+      "Analista Administrativo",
+      "Atendimento ao Cliente"
+    ],
+    skills: [
+      "Gestão de agenda",
+      "E-mails",
+      "Atendimento",
+      "Organização",
+      "Excel",
+      "Google Workspace",
+      "Planilhas",
+      "Administração",
+      "Contas a pagar",
+      "Contas a receber",
+      "Fluxo de caixa",
+      "Conciliação",
+      "Relatórios",
+      "Gestão Financeira",
+      "Suporte",
+      "Chat",
+      "WhatsApp",
+      "Telefone",
+      "SAC",
+      "Customer Success",
+      "Relacionamento"
+    ]
+  },
+  "Jurídico e Contabilidade": {
+    icon: "⚖️",
+    specialties: [
+      "Advogado(a)",
+      "Contador(a)",
+      "Consultor(a) Jurídico",
+      "Paralegal",
+      "Assessor(a) Jurídico",
+      "Compliance",
+      "Consultor(a) de Investimentos",
+      "Gestão Financeira"
+    ],
+    skills: [
+      "Direito Civil",
+      "Direito Trabalhista",
+      "Direito Empresarial",
+      "Direito Tributário",
+      "Contratos",
+      "Consultoria Jurídica",
+      "Contabilidade",
+      "Escrituração Fiscal",
+      "Declarações",
+      "Balanço Patrimonial",
+      "DRE",
+      "Folha de Pagamento",
+      "Compliance",
+      "Auditoria",
+      "Planejamento Tributário",
+      "Investimentos",
+      "Mercado Financeiro",
+      "Análise de Investimentos",
+      "Planejamento Financeiro"
+    ]
+  },
+  "Música e Arte": {
+    icon: "🎵",
+    specialties: [
+      "Músico",
+      "Produtor Musical",
+      "Compositor(a)",
+      "DJ",
+      "Professor(a) de Música",
+      "Técnico de Som",
+      "Cantor(a)"
+    ],
+    skills: [
+      "Violão",
+      "Piano",
+      "Bateria",
+      "Guitarra",
+      "Baixo",
+      "Canto",
+      "Produção Musical",
+      "Mixagem",
+      "Masterização",
+      "Logic Pro",
+      "Ableton",
+      "FL Studio",
+      "Pro Tools",
+      "Composição",
+      "Teoria Musical",
+      "Harmonia",
+      "Arranjo",
+      "DJ",
+      "Edição de Áudio"
+    ]
+  },
+  "Treinamento e Educação": {
+    icon: "🎓",
+    specialties: [
+      "Professor(a)",
+      "Instrutor(a)",
+      "Coach",
+      "Mentor(a)",
+      "Palestrante",
+      "Facilitador(a)",
+      "Consultor(a) de Treinamento",
+      "Tutor(a)"
+    ],
+    skills: [
+      "Didática",
+      "Pedagogia",
+      "Metodologias Ativas",
+      "EAD",
+      "Planejamento de Aulas",
+      "Avaliação",
+      "Mentoria",
+      "Coaching",
+      "PNL",
+      "Desenvolvimento Pessoal",
+      "Liderança",
+      "Comunicação",
+      "Oratória",
+      "Facilitação",
+      "Design Instrucional"
+    ]
+  },
+  "Arquitetura e Engenharia": {
+    icon: "🏗️",
+    specialties: [
+      "Arquiteto(a)",
+      "Engenheiro(a) Civil",
+      "Engenheiro(a) de Software",
+      "Engenheiro(a) de Dados",
+      "Urbanista",
+      "Designer de Interiores"
+    ],
+    skills: [
+      "AutoCAD",
+      "SketchUp",
+      "Revit",
+      "3D Studio Max",
+      "V-Ray",
+      "Lumion",
+      "ArchiCAD",
+      "Projeto Arquitetônico",
+      "Projeto Estrutural",
+      "Projeto Elétrico",
+      "Projeto Hidráulico",
+      "Gerenciamento de Obras",
+      "Orçamento",
+      "Cronograma",
+      "BIM",
+      "Desenho Técnico"
+    ]
+  },
+  "Saúde e Bem-estar": {
+    icon: "💪",
+    specialties: [
+      "Personal Trainer",
+      "Nutricionista",
+      "Psicólogo(a)",
+      "Terapeuta",
+      "Fisioterapeuta",
+      "Coach de Saúde"
+    ],
+    skills: [
+      "Musculação",
+      "Treinamento Funcional",
+      "Yoga",
+      "Pilates",
+      "Nutrição Esportiva",
+      "Nutrição Clínica",
+      "Reeducação Alimentar",
+      "Psicoterapia",
+      "Terapia Cognitivo-Comportamental",
+      "Psicanálise",
+      "Fisioterapia",
+      "RPG",
+      "Osteopatia",
+      "Acupuntura",
+      "Terapia Holística",
+      "Mindfulness",
+      "Meditação"
+    ]
+  },
+  "Outros": {
+    icon: "💡",
+    specialties: [
+      "Fotógrafo(a)",
+      "Videomaker",
+      "Consultor(a) de Negócios",
+      "Gestor(a) de Projetos",
+      "Recursos Humanos",
+      "Outros"
+    ],
+    skills: [
+      "Fotografia",
+      "Lightroom",
+      "Edição de Vídeo",
+      "Filmagem",
+      "Iluminação",
+      "Consultoria Empresarial",
+      "Planejamento Estratégico",
+      "Gestão de Projetos",
+      "Scrum",
+      "Kanban",
+      "Agile",
+      "Recrutamento",
+      "Seleção",
+      "Treinamento",
+      "Desenvolvimento",
+      "Avaliação de Desempenho",
+      "Outros"
+    ]
+  }
+};
+
+// Lista de todas as habilidades disponíveis (consolidada)
+export const skillsList = Array.from(
+  new Set(
+    Object.values(professionCategories).flatMap(category => category.skills)
+  )
+).sort();
+
+// Estados do Brasil para dropdown
+export const brazilianStates = [
+  { value: "AC", label: "Acre" },
+  { value: "AL", label: "Alagoas" },
+  { value: "AP", label: "Amapá" },
+  { value: "AM", label: "Amazonas" },
+  { value: "BA", label: "Bahia" },
+  { value: "CE", label: "Ceará" },
+  { value: "DF", label: "Distrito Federal" },
+  { value: "ES", label: "Espírito Santo" },
+  { value: "GO", label: "Goiás" },
+  { value: "MA", label: "Maranhão" },
+  { value: "MT", label: "Mato Grosso" },
+  { value: "MS", label: "Mato Grosso do Sul" },
+  { value: "MG", label: "Minas Gerais" },
+  { value: "PA", label: "Pará" },
+  { value: "PB", label: "Paraíba" },
+  { value: "PR", label: "Paraná" },
+  { value: "PE", label: "Pernambuco" },
+  { value: "PI", label: "Piauí" },
+  { value: "RJ", label: "Rio de Janeiro" },
+  { value: "RN", label: "Rio Grande do Norte" },
+  { value: "RS", label: "Rio Grande do Sul" },
+  { value: "RO", label: "Rondônia" },
+  { value: "RR", label: "Roraima" },
+  { value: "SC", label: "Santa Catarina" },
+  { value: "SP", label: "São Paulo" },
+  { value: "SE", label: "Sergipe" },
+  { value: "TO", label: "Tocantins" }
+];

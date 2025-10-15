@@ -1,0 +1,145 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Briefcase, Users, X } from 'lucide-react'
+import CreateProjectForm from '@/components/projects/CreateProjectForm'
+import CreateJobForm from '@/components/projects/CreateJobForm'
+
+export default function CreateProject() {
+  const navigate = useNavigate()
+  const [selectedType, setSelectedType] = useState<'project' | 'job' | null>(null)
+
+  // Se não selecionou tipo ainda, mostra opções
+  if (!selectedType) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl max-w-4xl w-full p-8 relative">
+          {/* Botão Fechar */}
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <X size={20} className="text-gray-600" />
+          </button>
+
+          {/* Título */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              O que você deseja criar?
+            </h1>
+            <p className="text-gray-600">
+              Escolha o tipo de publicação mais adequado para sua necessidade
+            </p>
+          </div>
+
+          {/* Opções */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Projeto */}
+            <button
+              onClick={() => setSelectedType('project')}
+              className="group relative bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-blue-500 hover:shadow-lg transition-all text-left"
+            >
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-blue-500 text-sm font-medium">Selecionar →</span>
+              </div>
+              
+              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-200 transition-colors">
+                <Briefcase size={28} className="text-blue-600" />
+              </div>
+              
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Projeto
+              </h3>
+              
+              <p className="text-gray-600 text-sm mb-4">
+                Para trabalhos pontuais com início, meio e fim definidos
+              </p>
+              
+              <div className="space-y-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Sites e landing pages</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Aplicativos móveis</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Design e identidade visual</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Desenvolvimento de sistemas</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <span className="text-xs text-gray-500">
+                  ⏱️ Duração: Prazo definido ou flexível
+                </span>
+              </div>
+            </button>
+
+            {/* Vaga */}
+            <button
+              onClick={() => setSelectedType('job')}
+              className="group relative bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-green-500 hover:shadow-lg transition-all text-left"
+            >
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-green-500 text-sm font-medium">Selecionar →</span>
+              </div>
+              
+              <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-200 transition-colors">
+                <Users size={28} className="text-green-600" />
+              </div>
+              
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Vaga
+              </h3>
+              
+              <p className="text-gray-600 text-sm mb-4">
+                Para contratação de profissionais fixos ou recorrentes
+              </p>
+              
+              <div className="space-y-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>CLT ou PJ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Trabalho remoto ou presencial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Tempo integral ou parcial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                  <span>Freelancer recorrente</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <span className="text-xs text-gray-500">
+                  📅 Duração: Contínua ou por período
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Renderiza o formulário baseado no tipo selecionado
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {selectedType === 'project' ? (
+        <CreateProjectForm onBack={() => setSelectedType(null)} />
+      ) : (
+        <CreateJobForm onBack={() => setSelectedType(null)} />
+      )}
+    </div>
+  )
+}

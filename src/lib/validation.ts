@@ -157,7 +157,7 @@ export const validationSchemas = {
       { 
         required: true, 
         message: 'Selecione pelo menos uma habilidade',
-        custom: (value) => Array.isArray(value) && value.length > 0
+        custom: (value: any) => Array.isArray(value) && value.length > 0
       },
     ],
   },

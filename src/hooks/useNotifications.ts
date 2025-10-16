@@ -70,7 +70,7 @@ export function useNotifications() {
       
       // Atualizar estado local
       const deletedNotification = notifications.find(n => n.id === notificationId);
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      setNotifications(prev => prev.filter(n => n.id === notificationId));
       
       if (deletedNotification && !deletedNotification.is_read) {
         setUnreadCount(prev => Math.max(0, prev - 1));
@@ -84,13 +84,13 @@ export function useNotifications() {
     loadNotifications();
 
     // Subscribe to real-time notifications
-    const { data: { user } } = supabase.auth.getUser();
-    
-    user.then(({ user: authUser }) => {
-      if (authUser) {
+    const setupSubscription = async () => {
+      const { data } = await supabase.auth.getUser();
+      
+      if (data?.user) {
         const subscription = notificationService.subscribeToNotifications(
-          authUser.id,
-          (newNotification) => {
+          data.user.id,
+          (newNotification: Notification) => {
             setNotifications(prev => [newNotification, ...prev]);
             setUnreadCount(prev => prev + 1);
           }
@@ -100,7 +100,9 @@ export function useNotifications() {
           subscription.unsubscribe();
         };
       }
-    });
+    };
+
+    setupSubscription();
   }, []);
 
   return {

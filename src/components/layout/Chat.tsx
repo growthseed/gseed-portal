@@ -33,14 +33,14 @@ export function Chat() {
       // Subscrever para mensagens em tempo real
       const unsubscribe = chatService.subscribeToMessages(
         selectedConversation.id,
-        (message: ChatMessage) => {
+        (message) => {
           setMessages((prev) => [...prev, message]);
           scrollToBottom();
         }
       );
 
       return () => {
-        if (unsubscribe) unsubscribe();
+        chatService.unsubscribeFromMessages(unsubscribe);
       };
     }
   }, [selectedConversation]);
@@ -112,10 +112,10 @@ export function Chat() {
     setSending(false);
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.participant?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    conv.participant?.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredConversations = conversations.filter(conv => {
+    const participant = conv.participant || conv.other_user;
+    return participant?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   if (loading) {
     return (

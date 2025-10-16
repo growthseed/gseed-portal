@@ -64,6 +64,7 @@ export interface Profile {
 export interface Project {
   id: string;
   user_id: string;
+  client_id?: string; // Alias para user_id (compatibilidade)
   title: string;
   description: string;
   category: string;
@@ -144,6 +145,11 @@ export interface Proposal {
   response_message?: string;
   created_at?: string;
   updated_at?: string;
+  
+  // Dados relacionados (via JOIN)
+  projects?: Project; // Singular para compatibilidade
+  profiles?: Profile; // Dados do profissional
+  professional_profiles?: ProfessionalProfile; // Perfil profissional completo
 }
 
 export interface Review {

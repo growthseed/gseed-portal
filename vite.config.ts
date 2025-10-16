@@ -13,5 +13,14 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true
+  },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // Suprimir warnings específicos
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+        warn(warning)
+      }
+    }
   }
 })

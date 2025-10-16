@@ -207,6 +207,13 @@ class AuthService {
   }
 
   /**
+   * Criar conta (método simplificado)
+   */
+  async signUp(email: string, password: string, name?: string) {
+    return this.signUpWithWelcomeEmail(email, password, name || 'Usuário');
+  }
+
+  /**
    * Login
    */
   async signIn(email: string, password: string) {

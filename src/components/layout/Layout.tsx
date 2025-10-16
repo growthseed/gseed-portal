@@ -6,7 +6,7 @@ interface LayoutProps {
   children: ReactNode
 }
 
-export default function Layout({ children }: LayoutProps) {
+function Layout({ children }: LayoutProps) {
   const { user } = useAuth()
   
   return (
@@ -22,3 +22,7 @@ export default function Layout({ children }: LayoutProps) {
     </div>
   )
 }
+
+// Export both default and named
+export default Layout;
+export { Layout };

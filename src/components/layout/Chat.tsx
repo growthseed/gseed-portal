@@ -31,21 +31,16 @@ export function Chat() {
       markAsRead();
       
       // Subscrever para mensagens em tempo real
-      const channel = chatService.subscribeToMessages(
+      const unsubscribe = chatService.subscribeToMessages(
         selectedConversation.id,
-        (message) => {
+        (message: ChatMessage) => {
           setMessages((prev) => [...prev, message]);
           scrollToBottom();
-        },
-        (message) => {
-          setMessages((prev) =>
-            prev.map((m) => (m.id === message.id ? message : m))
-          );
         }
       );
 
       return () => {
-        chatService.unsubscribeFromMessages();
+        if (unsubscribe) unsubscribe();
       };
     }
   }, [selectedConversation]);

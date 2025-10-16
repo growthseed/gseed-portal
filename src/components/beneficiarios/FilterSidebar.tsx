@@ -26,6 +26,8 @@ export interface BeneficiarioFilters {
   profissao?: string;
   valorMin?: number;
   valorMax?: number;
+  idadeMin?: number; // Idade mínima
+  idadeMax?: number; // Idade máxima
   isVIP?: boolean;
   temAlerta?: boolean;
   renovacaoProxima?: boolean;

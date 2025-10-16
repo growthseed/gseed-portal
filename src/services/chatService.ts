@@ -9,6 +9,11 @@ export interface Conversation {
   created_at: string;
   updated_at: string;
   // Dados enriquecidos
+  participant?: { // Alias para other_user (compatibilidade)
+    id: string;
+    name: string;
+    avatar_url: string | null;
+  };
   other_user?: {
     id: string;
     name: string;
@@ -124,6 +129,7 @@ class ChatService {
         return {
           ...conv,
           other_user: otherUser,
+          participant: otherUser, // Alias para compatibilidade
           last_message: lastMessage,
           unread_count: unreadCount || 0,
         };
@@ -234,6 +240,23 @@ class ChatService {
       .neq('sender_id', userId);
 
     return count || 0;
+  }
+
+  /**
+   * Alias para subscribeToConversation (compatibilidade)
+   */
+  subscribeToMessages(
+    conversationId: string,
+    callback: (message: ChatMessage) => void
+  ) {
+    return this.subscribeToConversation(conversationId, callback);
+  }
+
+  /**
+   * Cancelar inscrição (compatibilidade)
+   */
+  unsubscribeFromMessages(unsubscribe: () => void) {
+    if (unsubscribe) unsubscribe();
   }
 
   /**

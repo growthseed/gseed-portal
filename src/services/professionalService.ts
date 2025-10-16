@@ -140,6 +140,20 @@ class ProfessionalService {
   }
 
   /**
+   * Criar perfil básico (compatibilidade)
+   */
+  async createProfile(userId: string, profileData: Partial<Profile>) {
+    return this.update(userId, profileData);
+  }
+
+  /**
+   * Criar perfil profissional
+   */
+  async createProfessionalProfile(userId: string, professionalData: any) {
+    return this.updateProfessional(userId, professionalData);
+  }
+
+  /**
    * Atualizar perfil
    */
   async update(userId: string, updates: Partial<Profile>) {

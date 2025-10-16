@@ -53,14 +53,15 @@ export function SignUpForm({ onSuccess, userType, onBack }: SignUpFormProps) {
     setLoading(true);
 
     try {
-      const { user } = await authService.signUp({
-        email: formData.email,
-        password: formData.password,
-        fullName: formData.fullName,
-        userType: userType,
-      });
+      const result = await authService.signUp(
+        formData.email,
+        formData.password,
+        formData.fullName
+      );
 
-      if (!user) throw new Error('Erro ao criar usuário');
+      if (!result.success || !result.data?.user) throw new Error('Erro ao criar usuário');
+
+      const user = result.data.user;
 
       // Sucesso! Ir para próximo passo
       onSuccess(user.id, userType);

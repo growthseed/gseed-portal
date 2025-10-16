@@ -413,7 +413,7 @@ export function ProjetoDetalhes() {
                 <Button 
                   variant="outline" 
                   className="w-full mt-4"
-                  onClick={() => navigate(`/profissionais/${projeto.client_id}`)}
+                  onClick={() => navigate(`/profissionais/${projeto.client?.id}`)}
                 >
                   Ver Perfil Completo
                 </Button>

@@ -17,7 +17,7 @@ export function PublicHeader() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [unreadChatCount] = useState(0);
 
   useEffect(() => {
     // Verificar se há um usuário logado

@@ -7,8 +7,6 @@ import {
   Briefcase, 
   Mail, 
   Phone,
-  Calendar,
-  DollarSign,
   Globe,
   MessageCircle,
   AlertCircle,
@@ -46,12 +44,14 @@ export function ProfissionalDetalhes() {
     loadProfissional();
     checkAuth();
     loadAvaliacoes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     if (currentUser && id) {
       checkCanReview();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, id]);
 
   const checkAuth = async () => {
@@ -322,7 +322,7 @@ export function ProfissionalDetalhes() {
                     </h2>
                     <div className="flex flex-wrap gap-2">
                       {profissional.skills.map((skill, index) => (
-                        <Badge key={index} variant="secondary">
+                        <Badge key={index}>
                           {skill}
                         </Badge>
                       ))}

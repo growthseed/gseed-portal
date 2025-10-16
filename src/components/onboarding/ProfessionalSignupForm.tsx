@@ -226,7 +226,6 @@ export function ProfessionalSignupForm({ onComplete, onBack }: ProfessionalSignu
 
 
         const profileData = {
-          user_id: user.id,
           full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuário',
           email: user.email!,
           categoria: formData.categoria!,
@@ -237,7 +236,7 @@ export function ProfessionalSignupForm({ onComplete, onBack }: ProfessionalSignu
           portfolio_images: portfolioImages.length > 0 ? portfolioImages : undefined,
         };
 
-        await professionalService.createProfile(profileData);
+        await professionalService.createProfile(user.id, profileData);
         onComplete(formData as ProfessionalData);
       } catch (error) {
         console.error('Erro ao criar perfil:', error);

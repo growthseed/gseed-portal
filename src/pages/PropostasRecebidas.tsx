@@ -76,9 +76,9 @@ export default function PropostasRecebidas() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       proposals = proposals.filter(p =>
-        p.profiles?.name?.toLowerCase().includes(query) ||
+        (p.profiles && p.profiles.name && p.profiles.name.toLowerCase().includes(query)) ||
         p.message.toLowerCase().includes(query) ||
-        p.professional_profiles?.title?.toLowerCase().includes(query)
+        (p.professional_profiles && p.professional_profiles.title && p.professional_profiles.title.toLowerCase().includes(query))
       );
     }
 

@@ -6,12 +6,27 @@ interface PasswordStrengthProps {
   showRequirements?: boolean;
 }
 
+interface PasswordChecks {
+  length: boolean;
+  uppercase: boolean;
+  lowercase: boolean;
+  number: boolean;
+  special: boolean;
+}
+
+interface StrengthResult {
+  score: number;
+  label: string;
+  color: string;
+  checks?: PasswordChecks;
+}
+
 export function PasswordStrength({ password, showRequirements = true }: PasswordStrengthProps) {
-  const strength = useMemo(() => {
+  const strength = useMemo<StrengthResult>(() => {
     if (!password) return { score: 0, label: '', color: '' };
 
     let score = 0;
-    const checks = {
+    const checks: PasswordChecks = {
       length: password.length >= 8,
       uppercase: /[A-Z]/.test(password),
       lowercase: /[a-z]/.test(password),
@@ -77,7 +92,7 @@ export function PasswordStrength({ password, showRequirements = true }: Password
       </div>
 
       {/* Requisitos */}
-      {showRequirements && (
+      {showRequirements && strength.checks && (
         <div className="space-y-1.5">
           <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
             A senha deve conter:

@@ -10,7 +10,6 @@ import {
   DollarSign,
   Calendar,
   Image,
-  MapPin,
   Star,
   Zap,
   Info

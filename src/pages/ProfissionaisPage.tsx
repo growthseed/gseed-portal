@@ -28,7 +28,7 @@ export function ProfissionaisPage() {
   const [filters, setFilters] = useState<Filters>({
     search: '',
   });
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true); // Sempre visível no desktop
 
   useEffect(() => {

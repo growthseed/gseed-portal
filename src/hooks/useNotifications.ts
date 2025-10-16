@@ -85,11 +85,11 @@ export function useNotifications() {
 
     // Subscribe to real-time notifications
     const setupSubscription = async () => {
-      const { data } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       
-      if (data?.user) {
+      if (user) {
         const subscription = notificationService.subscribeToNotifications(
-          data.user.id,
+          user.id,
           (newNotification: Notification) => {
             setNotifications(prev => [newNotification, ...prev]);
             setUnreadCount(prev => prev + 1);
@@ -103,6 +103,7 @@ export function useNotifications() {
     };
 
     setupSubscription();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

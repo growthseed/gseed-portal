@@ -171,6 +171,14 @@ export interface Conversation {
   participant_2_id: string;
   last_message_at?: string;
   created_at?: string;
+  updated_at?: string;
+  last_message?: string;
+  unread_count?: number;
+  participant?: {
+    id: string;
+    name: string;
+    avatar_url: string | null;
+  };
 }
 
 export interface Message {

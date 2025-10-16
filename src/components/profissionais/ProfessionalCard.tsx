@@ -28,7 +28,7 @@ export interface ProfessionalCardProps {
 }
 
 export function ProfessionalCard({
-  id,
+  id: _id,
   nome,
   profissao,
   avatar,

@@ -19,6 +19,9 @@ export function PublicHeader() {
   const [loading, setLoading] = useState(true);
   const [unreadChatCount] = useState(0);
 
+  // Determina qual logo usar baseado no tema
+  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   useEffect(() => {
     // Verificar se há um usuário logado
     const getUser = async () => {
@@ -70,24 +73,20 @@ export function PublicHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 backdrop-blur supports-[backdrop-filter]:bg-white/95 dark:supports-[backdrop-filter]:bg-gray-800/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Logo - IGUAL AO AppHeader */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="flex items-center gap-3">
-              {/* Logo G com gradiente */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gseed-500 to-gseed-600 flex items-center justify-center shadow-md">
-                <span className="text-2xl font-bold text-white">G</span>
-              </div>
-              
-              {/* Texto Portal Gseed */}
-              <div className="flex flex-col leading-tight">
-                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                  Portal
-                </span>
-                <span className="text-xl font-bold bg-gradient-to-r from-gseed-600 to-gseed-800 dark:from-gseed-400 dark:to-gseed-600 bg-clip-text text-transparent">
-                  Gseed
-                </span>
-              </div>
-            </div>
+            {/* Logo Original Gseed em PNG */}
+            <img 
+              src={isDark ? '/logo-dark.png' : '/logo-light.png'}
+              alt="Gseed Logo"
+              className="h-8 w-auto" 
+              style={{ maxHeight: '32px' }}
+            />
+            
+            {/* Texto Works */}
+            <span className="text-2xl font-bold text-gseed-600 dark:text-gseed-400">
+              Works
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

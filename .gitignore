@@ -23,11 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# Environment variables - CRITICAL!
 .env
 .env.local
 .env.production
 .env.*.local
+.env.vercel
+.env.example
 
 # Supabase
 .branches
@@ -43,3 +45,6 @@ COMO-FAZER-COMMIT.md
 git-commit.ps1
 commit-now.ps1
 push-novo-token.bat
+
+# Documentos com chaves sensíveis
+RECRIAR_VARIAVEIS_VERCEL.md

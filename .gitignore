@@ -5,3 +5,5 @@ RECRIAR_VARIAVEIS_VERCEL.md
 node_modules/
 dist/
 .vercel
+.env.vercel 
+RECRIAR_VARIAVEIS_VERCEL.md 

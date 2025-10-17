@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -25,6 +26,7 @@ import type { Project } from '@/types/database.types';
 export function ProjetoDetalhes() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [projeto, setProjeto] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,6 +68,10 @@ export function ProjetoDetalhes() {
   };
 
   const handleEnviarProposta = () => {
+    if (!user) {
+      navigate('/login', { state: { returnTo: `/projetos/${id}` } });
+      return;
+    }
     setIsModalOpen(true);
   };
 

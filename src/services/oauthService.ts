@@ -1,11 +1,11 @@
 /**
  * Serviço de Autenticação OAuth
- * Suporta: Google, LinkedIn, GitHub
+ * Suporta: Google, LinkedIn, GitHub, Facebook
  */
 
 import { supabase } from '@/lib/supabase';
 
-export type OAuthProvider = 'google' | 'linkedin_oidc' | 'github';
+export type OAuthProvider = 'google' | 'linkedin_oidc' | 'github' | 'facebook';
 
 interface SignInWithOAuthOptions {
   provider: OAuthProvider;
@@ -14,18 +14,37 @@ interface SignInWithOAuthOptions {
 
 class OAuthService {
   /**
-   * Login com provedor OAuth (Google, LinkedIn, GitHub)
+   * Obtém a URL de redirecionamento configurada
+   */
+  private getRedirectUrl(): string {
+    // Prioridade: variável de ambiente > domínio atual
+    return import.meta.env.VITE_OAUTH_REDIRECT_URL || `${window.location.origin}/auth/callback`;
+  }
+
+  /**
+   * Obtém a URL do site configurada
+   */
+  private getSiteUrl(): string {
+    return import.meta.env.VITE_SITE_URL || window.location.origin;
+  }
+
+  /**
+   * Login com provedor OAuth (Google, LinkedIn, GitHub, Facebook)
    */
   async signInWithOAuth({ provider, redirectTo }: SignInWithOAuthOptions) {
     try {
+      const finalRedirectUrl = redirectTo || this.getRedirectUrl();
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: redirectTo || `${window.location.origin}/auth/callback`,
+          redirectTo: finalRedirectUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
+          // Configurações adicionais para manter no domínio principal
+          skipBrowserRedirect: false,
         },
       });
 
@@ -60,6 +79,13 @@ class OAuthService {
    */
   async signInWithGitHub(redirectTo?: string) {
     return this.signInWithOAuth({ provider: 'github', redirectTo });
+  }
+
+  /**
+   * Login com Facebook
+   */
+  async signInWithFacebook(redirectTo?: string) {
+    return this.signInWithOAuth({ provider: 'facebook', redirectTo });
   }
 
   /**

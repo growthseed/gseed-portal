@@ -72,15 +72,21 @@ export function PublicHeader() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="flex items-center gap-2">
-              <img 
-                src={theme === 'dark' ? '/logo-dark.png' : '/logo-light.png'} 
-                alt="Gseed" 
-                className="h-8 w-auto"
-              />
-              <span className="text-xl font-bold bg-gradient-to-r from-gseed-600 to-gseed-800 dark:from-gseed-400 dark:to-gseed-600 bg-clip-text text-transparent">
-                Works
-              </span>
+            <div className="flex items-center gap-3">
+              {/* Logo G com gradiente */}
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gseed-500 to-gseed-600 flex items-center justify-center shadow-md">
+                <span className="text-2xl font-bold text-white">G</span>
+              </div>
+              
+              {/* Texto Portal Gseed */}
+              <div className="flex flex-col leading-tight">
+                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Portal
+                </span>
+                <span className="text-xl font-bold bg-gradient-to-r from-gseed-600 to-gseed-800 dark:from-gseed-400 dark:to-gseed-600 bg-clip-text text-transparent">
+                  Gseed
+                </span>
+              </div>
             </div>
           </Link>
 

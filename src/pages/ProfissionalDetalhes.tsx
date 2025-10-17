@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -26,6 +27,7 @@ import AvaliacaoList from '@/components/Avaliacoes/AvaliacaoList';
 export function ProfissionalDetalhes() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [profissional, setProfissional] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -248,11 +250,31 @@ export function ProfissionalDetalhes() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Button size="lg" className="gap-2">
+                    <Button 
+                      size="lg" 
+                      className="gap-2"
+                      onClick={() => {
+                        if (!user) {
+                          navigate('/login', { state: { returnTo: `/profissionais/${id}` } });
+                          return;
+                        }
+                        // Implementar funcionalidade de chat
+                      }}
+                    >
                       <MessageCircle size={20} />
                       Enviar Mensagem
                     </Button>
-                    <Button variant="outline" size="lg">
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      onClick={() => {
+                        if (!user) {
+                          navigate('/login', { state: { returnTo: `/profissionais/${id}` } });
+                          return;
+                        }
+                        // Implementar funcionalidade de contratar
+                      }}
+                    >
                       Contratar
                     </Button>
                   </div>

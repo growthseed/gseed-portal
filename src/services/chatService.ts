@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
+import type { ConversationCompat, ChatMessageCompat, UserSummary } from '@/types/compat';
 
-export interface Conversation {
+export interface Conversation extends ConversationCompat {
   id: string;
   project_id: string | null;
   participant_1_id: string;
@@ -27,6 +28,7 @@ export interface Conversation {
 }
 
 export interface ChatMessage {
+  // extend compat
   id: string;
   conversation_id: string;
   sender_id: string;
@@ -38,11 +40,7 @@ export interface ChatMessage {
   created_at: string;
   updated_at: string;
   // Dados enriquecidos
-  sender?: {
-    id: string;
-    name: string;
-    avatar_url: string | null;
-  };
+  sender?: UserSummary;
 }
 
 class ChatService {
@@ -276,16 +274,25 @@ class ChatService {
           table: 'chat_messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        async (payload) => {
-          // Enriquecer com dados do sender
-          const { data: sender } = await supabase
-            .from('profiles')
-            .select('id, name, avatar_url')
-            .eq('id', payload.new.sender_id)
-            .single();
+        async (payload: any) => {
+          // defensive checks
+          const newRecord = payload?.new;
+          if (!newRecord) return;
+
+          // Enriquecer com dados do sender, se disponível
+          let sender = undefined;
+          if (newRecord.sender_id) {
+            const res = await supabase
+              .from('profiles')
+              .select('id, name, avatar_url')
+              .eq('id', newRecord.sender_id)
+              .maybeSingle();
+
+            sender = res?.data || undefined;
+          }
 
           callback({
-            ...(payload.new as ChatMessage),
+            ...(newRecord as ChatMessage),
             sender,
           });
         }
@@ -311,14 +318,17 @@ class ChatService {
           schema: 'public',
           table: 'chat_messages',
         },
-        async (payload) => {
-          // Verificar se a mensagem é de uma conversa do usuário
+        async (payload: any) => {
+          const convId = payload?.new?.conversation_id || payload?.old?.conversation_id;
+          if (!convId) return;
+
+          // Verificar se a conversa pertence ao usuário
           const { data: conversation } = await supabase
             .from('conversations')
             .select('id')
-            .eq('id', payload.new?.conversation_id || payload.old?.conversation_id)
+            .eq('id', convId)
             .or(`participant_1_id.eq.${userId},participant_2_id.eq.${userId}`)
-            .single();
+            .maybeSingle();
 
           if (conversation) {
             callback();

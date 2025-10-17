@@ -58,7 +58,7 @@ function App() {
       <ThemeProvider>
         <Router>
           <Routes>
-            {/* Rotas públicas COM PublicLayout */}
+            {/* Rotas PÚBLICAS - Apenas listagens */}
             <Route 
               path="/" 
               element={
@@ -76,14 +76,6 @@ function App() {
               } 
             />
             <Route 
-              path="/profissionais/:id" 
-              element={
-                <PublicLayout>
-                  <ProfissionalDetalhes />
-                </PublicLayout>
-              } 
-            />
-            <Route 
               path="/projetos" 
               element={
                 <PublicLayout>
@@ -91,24 +83,39 @@ function App() {
                 </PublicLayout>
               } 
             />
-            <Route 
-              path="/projetos/:id" 
-              element={
-                <PublicLayout>
-                  <ProjetoDetalhes />
-                </PublicLayout>
-              } 
-            />
-            
+
+            {/* Rotas de Autenticação */}
             <Route path="/login" element={user ? <Navigate to="/perfil" /> : <Login />} />
             <Route path="/cadastro" element={user ? <Navigate to="/perfil" /> : <OnboardingFlow />} />
             <Route path="/register" element={user ? <Navigate to="/perfil" /> : <OnboardingFlow />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
-
-            {/* Dashboard redireciona para Perfil */}
             <Route path="/dashboard" element={<Navigate to="/perfil" replace />} />
 
-            {/* Rotas protegidas - COM LAYOUT */}
+            {/* Rotas PROTEGIDAS - Detalhes e Interações */}
+            <Route
+              path="/projetos/:id"
+              element={
+                user ? (
+                  <Layout>
+                    <ProjetoDetalhes />
+                  </Layout>
+                ) : (
+                  <Navigate to="/login" state={{ returnTo: window.location.pathname }} />
+                )
+              }
+            />
+            <Route
+              path="/profissionais/:id"
+              element={
+                user ? (
+                  <Layout>
+                    <ProfissionalDetalhes />
+                  </Layout>
+                ) : (
+                  <Navigate to="/login" state={{ returnTo: window.location.pathname }} />
+                )
+              }
+            />
             <Route
               path="/perfil"
               element={

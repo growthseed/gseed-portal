@@ -106,9 +106,15 @@ export default function CriarVaga() {
         attachments: formData.anexos,
       };
 
-      const project = await projectService.createProject(projectData);
-      
-      navigate(`/projetos/${project.id}`);
+      const projectResult = await projectService.createProject(projectData);
+      if (projectResult && projectResult.success && projectResult.data && projectResult.data.id) {
+        navigate(`/projetos/${projectResult.data.id}`);
+      } else if (projectResult && projectResult.data && projectResult.data.id) {
+        navigate(`/projetos/${projectResult.data.id}`);
+      } else {
+        // fallback: try to navigate using a returned id or show error
+        console.warn('createProject did not return an id', projectResult);
+      }
     } catch (error) {
       console.error('Erro ao criar vaga:', error);
       alert('Erro ao publicar vaga. Tente novamente.');

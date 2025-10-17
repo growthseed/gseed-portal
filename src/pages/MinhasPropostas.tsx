@@ -181,18 +181,33 @@ export default function MinhasPropostas() {
           </div>
         ) : (
           <div className="grid gap-4">
-            {filteredProposals.map(proposal => (
-              <ProposalCard
-                key={proposal.id}
-                proposal={proposal}
-                viewMode="sent"
-                onView={() => {
-                  // TODO: Navigate to proposal details
-                  console.log('View proposal:', proposal.id);
-                }}
-                onDelete={() => handleWithdraw(proposal.id)}
-              />
-            ))}
+            {filteredProposals.map(proposal => {
+              const normalizedProposal = {
+                ...proposal,
+                projects: {
+                  id: proposal.projects?.id || '',
+                  title: proposal.projects?.title || '',
+                  category: (proposal.projects as any)?.category || '',
+                  status: (proposal.projects as any)?.status || '',
+                  profiles: proposal.projects?.profiles || undefined,
+                },
+                profiles: proposal.profiles || undefined,
+                professional_profiles: proposal.professional_profiles || undefined,
+              } as any;
+
+              return (
+                <ProposalCard
+                  key={proposal.id}
+                  proposal={normalizedProposal}
+                  viewMode="sent"
+                  onView={() => {
+                    // TODO: Navigate to proposal details
+                    console.log('View proposal:', proposal.id);
+                  }}
+                  onDelete={() => handleWithdraw(proposal.id)}
+                />
+              );
+            })}
           </div>
         )}
 

@@ -20,6 +20,10 @@ export interface Proposal extends ProposalData {
   response_message?: string;
   created_at: string;
   updated_at: string;
+  // optional joined relations returned by some queries (normalized to single object)
+  projects?: { id?: string; title?: string; category?: string; status?: string; profiles?: { id?: string; name?: string; avatar_url?: string } };
+  profiles?: { id?: string; name?: string; avatar_url?: string };
+  professional_profiles?: { id?: string; title?: string; skills?: any };
 }
 
 class ProposalService {
@@ -79,9 +83,15 @@ class ProposalService {
       `)
       .single();
 
-    if (error) throw error;
+  if (error) throw error;
 
-    // Enviar notificação para o contratante
+  // Normalize relations (supabase may return arrays depending on select)
+  const normalizedData: any = { ...data };
+  if (Array.isArray(normalizedData.projects)) normalizedData.projects = normalizedData.projects[0];
+  if (Array.isArray(normalizedData.profiles)) normalizedData.profiles = normalizedData.profiles[0];
+  if (Array.isArray(normalizedData.professional_profiles)) normalizedData.professional_profiles = normalizedData.professional_profiles[0];
+
+  // Enviar notificação para o contratante
     try {
       await notificationService.notifyNewProposal(
         project.user_id,
@@ -94,7 +104,7 @@ class ProposalService {
       // Não falhar a criação da proposta por erro na notificação
     }
 
-    return data;
+    return normalizedData;
   }
 
   async getProposal(id: string) {
@@ -119,7 +129,25 @@ class ProposalService {
       .single();
 
     if (error) throw error;
-    return data;
+
+    const normalized = (data as any) || null;
+    if (Array.isArray(normalized)) {
+      // map array items
+      return normalized.map((item: any) => {
+        if (Array.isArray(item.projects)) item.projects = item.projects[0];
+        if (Array.isArray(item.profiles)) item.profiles = item.profiles[0];
+        if (Array.isArray(item.professional_profiles)) item.professional_profiles = item.professional_profiles[0];
+        return item;
+      });
+    }
+
+    if (normalized) {
+      if (Array.isArray(normalized.projects)) normalized.projects = normalized.projects[0];
+      if (Array.isArray(normalized.profiles)) normalized.profiles = normalized.profiles[0];
+      if (Array.isArray(normalized.professional_profiles)) normalized.professional_profiles = normalized.professional_profiles[0];
+    }
+
+    return normalized;
   }
 
   async getProjectProposals(projectId: string) {
@@ -144,7 +172,15 @@ class ProposalService {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data;
+
+    const normalized = (data as any) || [];
+    // normalize each proposal
+    return (normalized || []).map((item: any) => {
+      if (Array.isArray(item.projects)) item.projects = item.projects[0];
+      if (Array.isArray(item.profiles)) item.profiles = item.profiles[0];
+      if (Array.isArray(item.professional_profiles)) item.professional_profiles = item.professional_profiles[0];
+      return item;
+    });
   }
 
   async getUserProposals(userId?: string) {
@@ -233,13 +269,14 @@ class ProposalService {
       if (status === 'accepted') {
         await notificationService.notifyProposalAccepted(
           proposal.user_id,
-          proposal.projects?.title || 'o projeto',
+          // projects might be an object or array depending on the select; handle both
+          ((Array.isArray(proposal.projects) ? (proposal.projects as any)[0]?.title : (proposal.projects as any)?.title) || 'o projeto'),
           proposal.id
         );
       } else if (status === 'rejected') {
         await notificationService.notifyProposalRejected(
           proposal.user_id,
-          proposal.projects?.title || 'o projeto',
+          ((Array.isArray(proposal.projects) ? (proposal.projects as any)[0]?.title : (proposal.projects as any)?.title) || 'o projeto'),
           proposal.id
         );
       }

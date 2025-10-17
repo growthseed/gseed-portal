@@ -92,25 +92,25 @@ export function PasswordStrength({ password, showRequirements = true }: Password
       </div>
 
       {/* Requisitos */}
-      {showRequirements && strength.checks && (
+      {showRequirements && !!strength.checks && (
         <div className="space-y-1.5">
           <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
             A senha deve conter:
           </p>
           <div className="space-y-1">
-            <Requirement met={strength.checks.length}>
+            <Requirement met={!!strength.checks && strength.checks.length}>
               No mínimo 8 caracteres
             </Requirement>
-            <Requirement met={strength.checks.uppercase}>
+            <Requirement met={!!strength.checks && strength.checks.uppercase}>
               Letras maiúsculas (A-Z)
             </Requirement>
-            <Requirement met={strength.checks.lowercase}>
+            <Requirement met={!!strength.checks && strength.checks.lowercase}>
               Letras minúsculas (a-z)
             </Requirement>
-            <Requirement met={strength.checks.number}>
+            <Requirement met={!!strength.checks && strength.checks.number}>
               Números (0-9)
             </Requirement>
-            <Requirement met={strength.checks.special}>
+            <Requirement met={!!strength.checks && strength.checks.special}>
               Caracteres especiais (!@#$%...)
             </Requirement>
           </div>

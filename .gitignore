@@ -48,3 +48,5 @@ push-novo-token.bat
 
 # Documentos com chaves sensíveis
 RECRIAR_VARIAVEIS_VERCEL.md
+.env.vercel 
+RECRIAR_VARIAVEIS_VERCEL.md 

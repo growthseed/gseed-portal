@@ -31,16 +31,16 @@ export function Chat() {
       markAsRead();
       
       // Subscrever para mensagens em tempo real
-      const unsubscribe = chatService.subscribeToMessages(
+      const unsubscribe = chatService.subscribeToConversation(
         selectedConversation.id,
-        (message) => {
+        (message: ChatMessage) => {
           setMessages((prev) => [...prev, message]);
           scrollToBottom();
         }
       );
 
       return () => {
-        chatService.unsubscribeFromMessages(unsubscribe);
+        if (unsubscribe) unsubscribe();
       };
     }
   }, [selectedConversation]);
@@ -113,7 +113,7 @@ export function Chat() {
   };
 
   const filteredConversations = conversations.filter(conv => {
-    const participant = conv.participant || conv.other_user;
+    const participant = conv.other_user;
     return participant?.name?.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
@@ -165,11 +165,11 @@ export function Chat() {
                   {/* Avatar */}
                   <div className="relative flex-shrink-0">
                     <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center overflow-hidden">
-                      {conv.participant?.avatar_url ? (
-                        <img src={conv.participant.avatar_url} alt={conv.participant.name} className="w-full h-full object-cover" />
+                      {conv.other_user?.avatar_url ? (
+                        <img src={conv.other_user.avatar_url} alt={conv.other_user.name} className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-lg font-semibold text-gray-600 dark:text-gray-300">
-                          {conv.participant?.name?.[0]?.toUpperCase()}
+                          {conv.other_user?.name?.[0]?.toUpperCase()}
                         </span>
                       )}
                     </div>
@@ -184,7 +184,7 @@ export function Chat() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <h3 className="font-semibold text-gray-900 dark:text-white truncate">
-                        {conv.participant?.name || 'Usuário'}
+                        {conv.other_user?.name || 'Usuário'}
                       </h3>
                       <span className="text-xs text-gray-500 dark:text-gray-400">
                         {conv.last_message?.created_at 
@@ -221,21 +221,21 @@ export function Chat() {
                 </button>
                 
                 <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center overflow-hidden">
-                  {selectedConversation.participant?.avatar_url ? (
-                    <img src={selectedConversation.participant.avatar_url} alt="" className="w-full h-full object-cover" />
+                  {selectedConversation.other_user?.avatar_url ? (
+                    <img src={selectedConversation.other_user.avatar_url} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <span className="font-semibold text-gray-600 dark:text-gray-300">
-                      {selectedConversation.participant?.name?.[0]?.toUpperCase()}
+                      {selectedConversation.other_user?.name?.[0]?.toUpperCase()}
                     </span>
                   )}
                 </div>
 
                 <div>
                   <h2 className="font-semibold text-gray-900 dark:text-white">
-                    {selectedConversation.participant?.name || 'Usuário'}
+                    {selectedConversation.other_user?.name || 'Usuário'}
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {selectedConversation.participant?.email}
+                    {/* Email opcional */}
                   </p>
                 </div>
               </div>

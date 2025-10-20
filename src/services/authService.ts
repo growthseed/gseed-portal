@@ -1,6 +1,9 @@
 import { supabase } from '@/lib/supabase';
 import { brevoService } from './brevoService';
 
+// Usar variável de ambiente ou fallback para localhost
+const SITE_URL = import.meta.env.VITE_SITE_URL || window.location.origin;
+
 class AuthService {
   /**
    * Solicitar recuperação de senha - USA BREVO
@@ -22,20 +25,19 @@ class AuthService {
         };
       }
 
-      // 2. Gerar link de reset via Supabase (mas NÃO envia email)
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+      // 2. Gerar link de reset via Supabase
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${SITE_URL}/reset-password`,
       });
 
       if (error) throw error;
 
       // 3. Enviar email customizado via Brevo
-      const resetUrl = `${window.location.origin}/reset-password`; // Supabase adiciona o token automaticamente
+      const resetUrl = `${SITE_URL}/reset-password`;
       try {
         await brevoService.sendPasswordResetEmail(email, resetUrl, profile.name);
       } catch (emailError) {
         console.error('Erro ao enviar email via Brevo:', emailError);
-        // Continua mesmo se falhar
       }
 
       return {
@@ -123,14 +125,14 @@ class AuthService {
         type: 'signup',
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/verify-email`
+          emailRedirectTo: `${SITE_URL}/verify-email`
         }
       });
 
       if (error) throw error;
 
       // Enviar email via Brevo
-      const verificationUrl = `${window.location.origin}/verify-email`;
+      const verificationUrl = `${SITE_URL}/verify-email`;
       try {
         await brevoService.sendVerificationEmail(email, verificationUrl, userName);
       } catch (emailError) {
@@ -151,45 +153,50 @@ class AuthService {
   }
 
   /**
-   * Criar conta - USA BREVO para emails
+   * Criar conta - CORRIGIDO
    */
   async signUpWithWelcomeEmail(email: string, password: string, name: string) {
     try {
-      // 1. Criar conta no Supabase (desabilitar email automático)
+      console.log('🔵 Iniciando cadastro...', { email, name, siteUrl: SITE_URL });
+
+      // 1. Criar conta no Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: {
-            name
-          },
-          emailRedirectTo: `${window.location.origin}/verify-email`
+          data: { name },
+          emailRedirectTo: `${SITE_URL}/verify-email`
         }
       });
 
-      if (error) throw error;
-
-      // 2. Enviar email de verificação via Brevo
-      const verificationUrl = `${window.location.origin}/verify-email`;
-      try {
-        await brevoService.sendVerificationEmail(email, verificationUrl, name);
-      } catch (emailError) {
-        console.error('Erro ao enviar email de verificação:', emailError);
-        // Continua mesmo se falhar
+      if (error) {
+        console.error('❌ Erro Supabase:', error);
+        throw error;
       }
 
-      // 3. Enviar email de boas-vindas via Brevo
+      console.log('✅ Conta criada no Supabase', data);
+
+      // 2. Enviar emails via Brevo (não bloqueia cadastro se falhar)
+      try {
+        const verificationUrl = `${SITE_URL}/verify-email`;
+        await brevoService.sendVerificationEmail(email, verificationUrl, name);
+        console.log('✅ Email de verificação enviado');
+      } catch (emailError) {
+        console.warn('⚠️ Erro ao enviar email de verificação:', emailError);
+      }
+
       try {
         await brevoService.sendWelcomeEmail(email, name);
+        console.log('✅ Email de boas-vindas enviado');
       } catch (emailError) {
-        console.error('Erro ao enviar email de boas-vindas:', emailError);
+        console.warn('⚠️ Erro ao enviar email de boas-vindas:', emailError);
       }
 
-      // 4. Adicionar à lista de contatos do Brevo (opcional)
       try {
         await brevoService.addContactToList(email, name, 1);
+        console.log('✅ Contato adicionado à lista');
       } catch (listError) {
-        console.error('Erro ao adicionar à lista:', listError);
+        console.warn('⚠️ Erro ao adicionar à lista:', listError);
       }
 
       return {
@@ -198,7 +205,7 @@ class AuthService {
         message: 'Conta criada com sucesso! Verifique seu email para confirmar.'
       };
     } catch (error: any) {
-      console.error('Erro ao criar conta:', error);
+      console.error('❌ Erro ao criar conta:', error);
       return {
         success: false,
         message: error.message || 'Erro ao criar conta'

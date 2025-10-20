@@ -53,15 +53,19 @@ export function SignUpForm({ onSuccess, userType, onBack }: SignUpFormProps) {
     setLoading(true);
 
     try {
-      const result = await authService.signUp(
+      // CORREÇÃO: Usar signUpWithWelcomeEmail para enviar emails via Brevo
+      const result = await authService.signUpWithWelcomeEmail(
         formData.email,
         formData.password,
         formData.fullName
       );
 
-      if (!result.success || !result.data?.user) throw new Error('Erro ao criar usuário');
+      if (!result.success || !result.data?.user) {
+        throw new Error(result.message || 'Erro ao criar usuário');
+      }
 
       const user = result.data.user;
+      console.log('✅ Usuário criado com sucesso:', user.id);
 
       // Sucesso! Ir para próximo passo
       onSuccess(user.id, userType);

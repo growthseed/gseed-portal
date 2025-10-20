@@ -220,10 +220,14 @@ export function ProfessionalSignupForm({ onComplete, onBack }: ProfessionalSignu
       
       setIsSubmitting(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Usuário não autenticado');
+        // CORREÇÃO: Usar getSession() ao invés de getUser() após signup
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.user) {
+          throw new Error('Sessão não encontrada. Faça login novamente.');
+        }
 
-
+        const user = session.user;
 
         const profileData = {
           full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuário',

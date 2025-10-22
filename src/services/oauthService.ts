@@ -17,7 +17,14 @@ class OAuthService {
    * Obtém a URL de redirecionamento configurada
    */
   private getRedirectUrl(): string {
-    // Prioridade: variável de ambiente > domínio atual
+    // FORÇAR URL DE PRODUÇÃO
+    const isProduction = window.location.hostname === 'portal.gseed.com.br';
+    
+    if (isProduction) {
+      return 'https://portal.gseed.com.br/auth/callback';
+    }
+    
+    // Localhost ou outro ambiente
     return import.meta.env.VITE_OAUTH_REDIRECT_URL || `${window.location.origin}/auth/callback`;
   }
 
@@ -25,6 +32,13 @@ class OAuthService {
    * Obtém a URL do site configurada
    */
   private getSiteUrl(): string {
+    // FORÇAR URL DE PRODUÇÃO
+    const isProduction = window.location.hostname === 'portal.gseed.com.br';
+    
+    if (isProduction) {
+      return 'https://portal.gseed.com.br';
+    }
+    
     return import.meta.env.VITE_SITE_URL || window.location.origin;
   }
 

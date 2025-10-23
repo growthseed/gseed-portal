@@ -14,14 +14,16 @@ export default function Register() {
   const { signUp } = useAuth()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [userType, setUserType] = useState<'freelancer' | 'client'>('freelancer')
+  const [userType, setUserType] = useState<'professional' | 'contractor'>('professional')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phone: ''
   })
   const [errors, setErrors] = useState<ValidationErrors>({})
+  const [acceptTerms, setAcceptTerms] = useState(false)
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -38,6 +40,12 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Validar termos de uso
+    if (!acceptTerms) {
+      toast.error('Você precisa aceitar os termos de uso para continuar')
+      return
+    }
+
     // Validar formulário base
     const validationErrors = validateForm(formData, validationSchemas.register)
     
@@ -58,10 +66,11 @@ export default function Register() {
     try {
       await signUp(formData.email, formData.password, {
         name: formData.name,
-        user_type: userType
+        user_type: userType,
+        phone: formData.phone || null
       })
-      toast.success('Conta criada com sucesso!')
-      navigate('/dashboard')
+      toast.success('Conta criada com sucesso! Complete seu perfil.')
+      navigate('/onboarding')
     } catch (error) {
       console.error(error)
     } finally {
@@ -86,38 +95,38 @@ export default function Register() {
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
-                onClick={() => setUserType('freelancer')}
+                onClick={() => setUserType('professional')}
                 className={`p-4 rounded-lg border-2 transition-all ${
-                  userType === 'freelancer'
+                  userType === 'professional'
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
                 <Briefcase className={`mx-auto mb-2 ${
-                  userType === 'freelancer' ? 'text-blue-600' : 'text-gray-400'
+                  userType === 'professional' ? 'text-blue-600' : 'text-gray-400'
                 }`} size={24} />
                 <span className={`text-sm font-medium ${
-                  userType === 'freelancer' ? 'text-blue-700' : 'text-gray-700'
+                  userType === 'professional' ? 'text-blue-700' : 'text-gray-700'
                 }`}>
-                  Freelancer
+                  Profissional
                 </span>
               </button>
               <button
                 type="button"
-                onClick={() => setUserType('client')}
+                onClick={() => setUserType('contractor')}
                 className={`p-4 rounded-lg border-2 transition-all ${
-                  userType === 'client'
+                  userType === 'contractor'
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
                 <Users className={`mx-auto mb-2 ${
-                  userType === 'client' ? 'text-blue-600' : 'text-gray-400'
+                  userType === 'contractor' ? 'text-blue-600' : 'text-gray-400'
                 }`} size={24} />
                 <span className={`text-sm font-medium ${
-                  userType === 'client' ? 'text-blue-700' : 'text-gray-700'
+                  userType === 'contractor' ? 'text-blue-700' : 'text-gray-700'
                 }`}>
-                  Cliente
+                  Contratante
                 </span>
               </button>
             </div>
@@ -210,8 +219,31 @@ export default function Register() {
               )}
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" className="rounded border-gray-300" required />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Telefone <span className="text-gray-400">(opcional)</span>
+              </label>
+              <div className="relative">
+                <Input
+                  type="tel"
+                  placeholder="(00) 00000-0000"
+                  value={formData.phone}
+                  onChange={(e) => handleChange('phone', e.target.value)}
+                  className={errors.phone ? 'border-red-500 focus:ring-red-500' : ''}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-sm text-red-600">{errors.phone}</p>
+              )}
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <input 
+                type="checkbox" 
+                className="rounded border-gray-300 mt-1" 
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+              />
               <label className="text-sm text-gray-600">
                 Concordo com os{' '}
                 <Link to="/terms" className="text-blue-600 hover:underline">
@@ -225,7 +257,7 @@ export default function Register() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || !acceptTerms}>
               {loading ? 'Criando conta...' : 'Criar Conta'}
             </Button>
             <div className="text-sm text-center text-gray-600">

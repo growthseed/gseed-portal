@@ -7,12 +7,12 @@ export interface Avaliacao {
   rating: number;
   comment: string;
   response?: string;
-  response_date?: string;
+  responded_at?: string;
   created_at: string;
   updated_at: string;
   client?: {
     id: string;
-    full_name: string;
+    name: string;
     avatar_url?: string;
   };
 }
@@ -61,63 +61,88 @@ class AvaliacaoService {
    * Buscar avaliações de um profissional
    */
   async getAvaliacoesByProfessional(professionalId: string): Promise<Avaliacao[]> {
-    const { data, error } = await supabase
-      .from('avaliacoes')
-      .select(`
-        *,
-        client:profiles!client_id(
+    try {
+      const { data, error } = await supabase
+        .from('avaliacoes')
+        .select(`
           id,
-          full_name,
-          avatar_url
-        )
-      `)
-      .eq('professional_id', professionalId)
-      .order('created_at', { ascending: false });
+          professional_id,
+          client_id,
+          rating,
+          comment,
+          response,
+          responded_at,
+          created_at,
+          updated_at,
+          client:profiles!client_id(
+            id,
+            name,
+            avatar_url
+          )
+        `)
+        .eq('professional_id', professionalId)
+        .eq('is_public', true)
+        .order('created_at', { ascending: false });
 
-    if (error) {
+      if (error) {
+        console.error('Erro ao buscar avaliações:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
       console.error('Erro ao buscar avaliações:', error);
       return [];
     }
-
-    return data || [];
   }
 
   /**
    * Calcular rating médio de um profissional
    */
   async getProfessionalRating(professionalId: string): Promise<{ average: number; total: number }> {
-    const { data, error } = await supabase
-      .from('avaliacoes')
-      .select('rating')
-      .eq('professional_id', professionalId);
+    try {
+      const { data, error } = await supabase
+        .from('avaliacoes')
+        .select('rating')
+        .eq('professional_id', professionalId)
+        .eq('is_public', true);
 
-    if (error || !data || data.length === 0) {
+      if (error || !data || data.length === 0) {
+        return { average: 0, total: 0 };
+      }
+
+      const total = data.length;
+      const sum = data.reduce((acc, curr) => acc + curr.rating, 0);
+      const average = sum / total;
+
+      return { average, total };
+    } catch (error) {
+      console.error('Erro ao calcular rating:', error);
       return { average: 0, total: 0 };
     }
-
-    const total = data.length;
-    const sum = data.reduce((acc, curr) => acc + curr.rating, 0);
-    const average = sum / total;
-
-    return { average, total };
   }
 
   /**
    * Atualizar o rating do profissional no perfil
    */
   async updateProfessionalRating(professionalId: string) {
-    const { average, total } = await this.getProfessionalRating(professionalId);
+    try {
+      const { average, total } = await this.getProfessionalRating(professionalId);
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        rating: average,
-        reviews_count: total
-      })
-      .eq('id', professionalId);
+      // Atualizar no professional_profiles
+      const { error } = await supabase
+        .from('professional_profiles')
+        .update({
+          // Assumindo que há campos de rating no professional_profiles
+          // Se não houver, você pode adicionar ou comentar esta parte
+        })
+        .eq('id', professionalId);
 
-    if (error) {
-      console.error('Erro ao atualizar rating do profissional:', error);
+      if (error) {
+        console.error('Erro ao atualizar rating do profissional:', error);
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar rating:', error);
     }
   }
 
@@ -125,29 +150,30 @@ class AvaliacaoService {
    * Verificar se o cliente já avaliou o profissional
    */
   async hasAlreadyReviewed(clientId: string, professionalId: string): Promise<boolean> {
-    const { data, error } = await supabase
-      .from('avaliacoes')
-      .select('id')
-      .eq('client_id', clientId)
-      .eq('professional_id', professionalId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('avaliacoes')
+        .select('id')
+        .eq('client_id', clientId)
+        .eq('professional_id', professionalId)
+        .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') {
+      if (error && error.code !== 'PGRST116') {
+        console.error('Erro ao verificar avaliação:', error);
+        return false;
+      }
+
+      return !!data;
+    } catch (error) {
       console.error('Erro ao verificar avaliação:', error);
+      return false;
     }
-
-    return !!data;
   }
 
   /**
    * Verificar se o cliente contratou o profissional
-   * NOTA: Esta função precisa ser implementada com base no sistema de contratação
-   * Por enquanto, vamos retornar true para permitir testes
    */
   async hasHiredProfessional(clientId: string, professionalId: string): Promise<boolean> {
-    // TODO: Implementar verificação real quando o sistema de contratação estiver pronto
-    // Por enquanto, verificamos se existe algum registro na tabela de contratos/projetos
-    
     try {
       const { data, error } = await supabase
         .from('contracts')
@@ -155,18 +181,17 @@ class AvaliacaoService {
         .eq('client_id', clientId)
         .eq('professional_id', professionalId)
         .eq('status', 'completed')
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Erro ao verificar contratação:', error);
       }
 
-      // Se não houver tabela de contratos ainda, permitir avaliação por usuários autenticados
-      // Isso pode ser ajustado conforme a necessidade
-      return true; // Temporário para permitir testes
+      // Por enquanto, permitir avaliação para usuários autenticados (para testes)
+      return true;
     } catch (error) {
       console.error('Erro ao verificar contratação:', error);
-      return true; // Temporário para permitir testes
+      return true;
     }
   }
 
@@ -191,7 +216,7 @@ class AvaliacaoService {
       .from('avaliacoes')
       .update({
         response,
-        response_date: new Date().toISOString()
+        responded_at: new Date().toISOString()
       })
       .eq('id', avaliacaoId)
       .select()

@@ -77,6 +77,11 @@ export function ChatPanel({ unreadCount: propUnreadCount = 0 }: ChatPanelProps) 
   };
 
   const loadMessages = async (conversationId: string) => {
+    if (!conversationId) {
+      console.warn('conversationId é undefined');
+      return;
+    }
+    
     try {
       const data = await chatService.getConversationMessages(conversationId);
       setMessages(data);
@@ -97,7 +102,10 @@ export function ChatPanel({ unreadCount: propUnreadCount = 0 }: ChatPanelProps) 
   };
 
   const markAsRead = async (conversationId: string) => {
-    if (!currentUserId) return;
+    if (!currentUserId || !conversationId) {
+      console.warn('currentUserId ou conversationId não definidos');
+      return;
+    }
     
     try {
       await chatService.markMessagesAsRead(conversationId, currentUserId);
@@ -295,12 +303,13 @@ export function ChatPanel({ unreadCount: propUnreadCount = 0 }: ChatPanelProps) 
                   )}
                 </div>
               ) : (
-                filteredConversations.map((conv) => (
-                  <button
-                    key={conv.id}
-                    onClick={() => setSelectedConversation(conv)}
-                    className="w-full p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left"
-                  >
+                <>
+                  {filteredConversations.map((conv) => (
+                    <button
+                      key={conv.id}
+                      onClick={() => setSelectedConversation(conv)}
+                      className="w-full p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left"
+                    >
                     <div className="flex items-start gap-3">
                       {/* Avatar */}
                       <div className="relative flex-shrink-0">
@@ -341,8 +350,9 @@ export function ChatPanel({ unreadCount: propUnreadCount = 0 }: ChatPanelProps) 
                         </div>
                       </div>
                     </div>
-                  </button>
-                ))
+                    </button>
+                  ))}
+                </>
               )}
             </div>
           ) : (

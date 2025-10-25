@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { X, Send, DollarSign, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
+import { proposalService } from '@/services/proposalService';
 import type { Project } from '@/types/database.types';
 
 interface ModalEnviarPropostaProps {
@@ -23,18 +25,31 @@ export function ModalEnviarProposta({ isOpen, onClose, projeto, onSuccess }: Mod
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (formData.message.length < 100) {
+      toast.error('A mensagem deve ter no mínimo 100 caracteres');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // TODO: Implementar envio de proposta quando tivermos autenticação
-      console.log('Enviando proposta:', formData);
-      
-      // Simular delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Converter valor para número (remover formatação)
+      const valueStr = formData.proposed_value.replace(/[^0-9]/g, '');
+      const proposedValue = Number(valueStr) / 100;
+
+      await proposalService.createProposal({
+        project_id: projeto.id,
+        message: formData.message,
+        proposed_value: proposedValue,
+        proposed_deadline: formData.proposed_deadline,
+      });
+
+      toast.success('Proposta enviada com sucesso!');
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao enviar proposta:', error);
+      toast.error(error.message || 'Erro ao enviar proposta');
     } finally {
       setLoading(false);
     }

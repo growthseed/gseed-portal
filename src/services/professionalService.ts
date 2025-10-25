@@ -27,10 +27,10 @@ class ProfessionalService {
             professional_bio,
             skills,
             hourly_rate,
-            availability,
-            views_count
+            availability
           )
         `)
+        .eq('is_professional', true)
         .order('created_at', { ascending: false });
 
       // Aplicar filtros
@@ -107,13 +107,13 @@ class ProfessionalService {
       // Mesclar dados do perfil profissional no perfil principal
       const mergedData = {
         ...data,
+        full_name: data.name, // Mapear name para full_name
         professional_title: data.professional?.title,
         professional_bio: data.professional?.professional_bio,
         skills: data.professional?.skills || [],
         hourly_rate: data.professional?.hourly_rate,
         availability: data.professional?.availability,
         is_available: data.professional?.availability === 'freelance' || data.professional?.availability === 'part_time',
-        views_count: data.professional?.views_count || 0,
         portfolio: data.professional?.portfolio_images || [],
         services: [], // TODO: Implementar quando tivermos tabela de serviços
         rating: null, // TODO: Calcular quando tivermos reviews
@@ -122,6 +122,8 @@ class ProfessionalService {
         response_time: '< 1h', // TODO: Calcular quando tivermos mensagens
         success_rate: 100, // TODO: Calcular quando tivermos projetos
         availability_hours: 40, // TODO: Pegar do perfil profissional
+        location_city: data.city,
+        location_state: data.state,
       };
 
       return {
@@ -219,20 +221,34 @@ class ProfessionalService {
    */
   async incrementViews(userId: string) {
     try {
-      // Incrementar no perfil profissional
-      const { data: professional } = await supabase
+      // Buscar perfil profissional
+      const { data: professional, error: fetchError } = await supabase
         .from('professional_profiles')
-        .select('views_count')
+        .select('id, views_count')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
-      if (professional) {
-        await supabase
-          .from('professional_profiles')
-          .update({ 
-            views_count: (professional.views_count || 0) + 1 
-          })
-          .eq('user_id', userId);
+      if (fetchError) {
+        console.error('Erro ao buscar perfil profissional:', fetchError);
+        return { success: false, message: fetchError.message };
+      }
+
+      if (!professional) {
+        console.warn('Perfil profissional não encontrado para incrementar views');
+        return { success: false, message: 'Perfil profissional não encontrado' };
+      }
+
+      // Incrementar visualizações
+      const { error: updateError } = await supabase
+        .from('professional_profiles')
+        .update({ 
+          views_count: (professional.views_count || 0) + 1 
+        })
+        .eq('user_id', userId);
+
+      if (updateError) {
+        console.error('Erro ao incrementar visualizações:', updateError);
+        return { success: false, message: updateError.message };
       }
 
       return { success: true };

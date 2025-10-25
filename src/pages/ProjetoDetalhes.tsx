@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ModalEnviarProposta } from '@/components/propostas/ModalEnviarProposta';
 import { projectService } from '@/services/projectService';
+import { proposalService } from '@/services/proposalService';
 import type { Project } from '@/types/database.types';
 
 export function ProjetoDetalhes() {
@@ -54,9 +55,18 @@ export function ProjetoDetalhes() {
         await projectService.incrementViews(id);
         
         // Verificar se usuário já enviou proposta
-        // TODO: Implementar quando tivermos autenticação
-        // const proposalResult = await proposalService.getUserProposal(id, userId);
-        // setUserProposal(proposalResult.data);
+        if (user) {
+          try {
+            const proposals = await proposalService.getUserProposals();
+            const existingProposal = proposals.find((p: any) => p.project_id === id);
+            if (existingProposal) {
+              setUserProposal(existingProposal);
+            }
+          } catch (proposalError) {
+            console.error('Erro ao verificar proposta:', proposalError);
+            // Não falhar o carregamento por erro ao buscar proposta
+          }
+        }
       } else {
         setError(result.message || 'Projeto não encontrado');
       }

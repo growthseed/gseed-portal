@@ -23,8 +23,9 @@ import { supabase } from '@/lib/supabase';
 import type { Profile } from '@/types/database.types';
 import AvaliacaoForm from '@/components/Avaliacoes/AvaliacaoForm';
 import AvaliacaoList from '@/components/Avaliacoes/AvaliacaoList';
+import { FloatingChat } from '@/components/Chat/FloatingChat';
 
-export function ProfissionalDetalhes() {
+function ProfissionalDetalhes() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export function ProfissionalDetalhes() {
   const [canReview, setCanReview] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
+  const [showFloatingChat, setShowFloatingChat] = useState(false);
 
   useEffect(() => {
     loadProfissional();
@@ -67,8 +69,21 @@ export function ProfissionalDetalhes() {
     
     setLoadingReviews(true);
     try {
-      const reviews = await avaliacaoService.getAvaliacoesByProfessional(id);
-      const rating = await avaliacaoService.getProfessionalRating(id);
+      // Buscar pelo user_id do profissional, não pelo professional_profiles.id
+      const { data: professional } = await supabase
+        .from('professional_profiles')
+        .select('id')
+        .eq('user_id', id)
+        .maybeSingle();
+
+      if (!professional) {
+        console.warn('Perfil profissional não encontrado');
+        setLoadingReviews(false);
+        return;
+      }
+
+      const reviews = await avaliacaoService.getAvaliacoesByProfessional(professional.id);
+      const rating = await avaliacaoService.getProfessionalRating(professional.id);
       
       setAvaliacoes(reviews);
       setAverageRating(rating.average);
@@ -84,8 +99,17 @@ export function ProfissionalDetalhes() {
     if (!currentUser || !id) return;
     
     try {
-      const hasHired = await avaliacaoService.hasHiredProfessional(currentUser.id, id);
-      const hasReviewed = await avaliacaoService.hasAlreadyReviewed(currentUser.id, id);
+      // Buscar professional_id
+      const { data: professional } = await supabase
+        .from('professional_profiles')
+        .select('id')
+        .eq('user_id', id)
+        .maybeSingle();
+
+      if (!professional) return;
+
+      const hasHired = await avaliacaoService.hasHiredProfessional(currentUser.id, professional.id);
+      const hasReviewed = await avaliacaoService.hasAlreadyReviewed(currentUser.id, professional.id);
       
       setCanReview(hasHired && !hasReviewed);
     } catch (error) {
@@ -97,8 +121,20 @@ export function ProfissionalDetalhes() {
     if (!currentUser || !id) return;
     
     try {
+      // Buscar professional_id
+      const { data: professional } = await supabase
+        .from('professional_profiles')
+        .select('id')
+        .eq('user_id', id)
+        .maybeSingle();
+
+      if (!professional) {
+        alert('Perfil profissional não encontrado');
+        return;
+      }
+
       await avaliacaoService.createAvaliacao({
-        professional_id: id,
+        professional_id: professional.id,
         client_id: currentUser.id,
         rating: data.rating,
         comment: data.comment
@@ -144,6 +180,14 @@ export function ProfissionalDetalhes() {
       style: 'currency',
       currency: 'BRL'
     }).format(value);
+  };
+
+  const handleSendMessage = () => {
+    if (!user) {
+      navigate('/login', { state: { returnTo: `/profissionais/${id}` } });
+      return;
+    }
+    setShowFloatingChat(true);
   };
 
   if (loading) {
@@ -234,11 +278,11 @@ export function ProfissionalDetalhes() {
                         </div>
                       )}
                       
-                      {profissional.rating && (
+                      {averageRating > 0 && (
                         <div className="flex items-center gap-1">
                           <Star size={16} className="fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">{profissional.rating.toFixed(1)}</span>
-                          <span>({profissional.reviews_count || 0} avaliações)</span>
+                          <span className="font-semibold">{averageRating.toFixed(1)}</span>
+                          <span>({totalAvaliacoes} avaliações)</span>
                         </div>
                       )}
 
@@ -253,13 +297,7 @@ export function ProfissionalDetalhes() {
                     <Button 
                       size="lg" 
                       className="gap-2"
-                      onClick={() => {
-                        if (!user) {
-                          navigate('/login', { state: { returnTo: `/profissionais/${id}` } });
-                          return;
-                        }
-                        // Implementar funcionalidade de chat
-                      }}
+                      onClick={handleSendMessage}
                     >
                       <MessageCircle size={20} />
                       Enviar Mensagem
@@ -272,7 +310,8 @@ export function ProfissionalDetalhes() {
                           navigate('/login', { state: { returnTo: `/profissionais/${id}` } });
                           return;
                         }
-                        // Implementar funcionalidade de contratar
+                        // Por enquanto, enviar mensagem
+                        handleSendMessage();
                       }}
                     >
                       Contratar
@@ -332,7 +371,7 @@ export function ProfissionalDetalhes() {
                     Sobre Mim
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                    {profissional.bio || 'Nenhuma descrição disponível.'}
+                    {profissional.bio || profissional.professional_bio || 'Nenhuma descrição disponível.'}
                   </p>
                 </div>
 
@@ -532,6 +571,14 @@ export function ProfissionalDetalhes() {
           </div>
         </div>
       </div>
+
+      {/* Floating Chat */}
+      {showFloatingChat && id && (
+        <FloatingChat
+          recipientId={id}
+          onClose={() => setShowFloatingChat(false)}
+        />
+      )}
     </div>
   );
 }

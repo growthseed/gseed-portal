@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Star, Briefcase, Filter, X, UserPlus, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,8 +10,8 @@ import type { Profile } from '@/types/database.types';
 
 interface Filters {
   search: string;
-  profession?: string;  // Profissão única (select)
-  skills?: string[];    // Habilidades da profissão
+  profession?: string;
+  skills?: string[];
   location?: string;
   minRate?: number;
   maxRate?: number;
@@ -29,13 +29,11 @@ export function ProfissionaisPage() {
     search: '',
   });
   const [showFilters] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(true); // Sempre visível no desktop
+  const [showSidebar, setShowSidebar] = useState(true);
 
-  useEffect(() => {
-    loadProfissionais();
-  }, [filters]);
-
-  const loadProfissionais = async () => {
+  // Carregar profissionais com useCallback para memoização
+  const loadProfissionais = useCallback(async () => {
+    console.log('[ProfissionaisPage] 🔄 Carregando profissionais...');
     setLoading(true);
     setError(null);
     
@@ -52,29 +50,49 @@ export function ProfissionaisPage() {
       });
       
       if (result.success && result.data) {
+        console.log('[ProfissionaisPage] ✅ Profissionais carregados:', result.data.length);
         setProfissionais(result.data);
       } else {
+        console.error('[ProfissionaisPage] ❌ Erro ao carregar:', result.message);
         setError(result.message || 'Erro ao carregar profissionais');
       }
     } catch (err: any) {
+      console.error('[ProfissionaisPage] 💥 Erro fatal:', err);
       setError(err.message || 'Erro ao carregar profissionais');
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    filters.search,
+    filters.skills,
+    filters.location,
+    filters.minRate,
+    filters.maxRate,
+    filters.minRating,
+    filters.isAvailable,
+    filters.isAsdrm
+  ]);
 
-  const clearFilters = () => {
+  // Carregar profissionais apenas quando filtros mudarem
+  useEffect(() => {
+    console.log('[ProfissionaisPage] 📍 Filtros mudaram, recarregando...');
+    loadProfissionais();
+  }, [loadProfissionais]);
+
+  const clearFilters = useCallback(() => {
     setFilters({ search: '' });
-  };
+  }, []);
 
-  const activeFiltersCount = 
+  const activeFiltersCount = useMemo(() => 
     (filters.profession ? 1 : 0) +
     (filters.skills && filters.skills.length > 0 ? filters.skills.length : 0) +
     (filters.location ? 1 : 0) +
     (filters.minRate ? 1 : 0) +
     (filters.maxRate ? 1 : 0) +
     (filters.minRating ? 1 : 0) +
-    (filters.isAvailable ? 1 : 0);
+    (filters.isAvailable ? 1 : 0),
+    [filters]
+  );
 
   const formatCurrency = (value?: number) => {
     if (!value) return 'A combinar';
@@ -86,7 +104,7 @@ export function ProfissionaisPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-      {/* Sidebar de Filtros - Sempre visível no desktop */}
+      {/* Sidebar de Filtros */}
       <FilterSidebar
         isOpen={showSidebar}
         onClose={() => setShowSidebar(false)}
@@ -124,7 +142,7 @@ export function ProfissionaisPage() {
               />
             </div>
             
-            {/* Botão de Filtros Sidebar */}
+            {/* Botão de Filtros - Mobile */}
             <Button
               variant={showSidebar ? 'default' : 'outline'}
               onClick={() => setShowSidebar(!showSidebar)}

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Briefcase, SlidersHorizontal, UserPlus } from 'lucide-react';
+import { Search, Briefcase, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -27,13 +27,11 @@ export function ProjetosPage() {
   const [filters, setFilters] = useState<Filters>({
     search: '',
   });
-  const [showSidebar, setShowSidebar] = useState(true); // Sidebar sempre visível no desktop
+  const [showSidebar, setShowSidebar] = useState(true);
 
-  useEffect(() => {
-    loadProjetos();
-  }, [filters]);
-
-  const loadProjetos = async () => {
+  // Carregar projetos com useCallback para memoização
+  const loadProjetos = useCallback(async () => {
+    console.log('[ProjetosPage] 🔄 Carregando projetos...');
     setLoading(true);
     setError(null);
     
@@ -49,32 +47,51 @@ export function ProjetosPage() {
       });
       
       if (result.success && result.data) {
+        console.log('[ProjetosPage] ✅ Projetos carregados:', result.data.length);
         setProjetos(result.data);
       } else {
+        console.error('[ProjetosPage] ❌ Erro ao carregar:', result.message);
         setError(result.message || 'Erro ao carregar projetos');
       }
     } catch (err: any) {
+      console.error('[ProjetosPage] 💥 Erro fatal:', err);
       setError(err.message || 'Erro ao carregar projetos');
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    filters.search,
+    filters.category,
+    filters.workModel,
+    filters.minBudget,
+    filters.maxBudget,
+    filters.location,
+    filters.skills
+  ]);
 
-  const clearFilters = () => {
+  // Carregar projetos apenas quando filtros mudarem
+  useEffect(() => {
+    console.log('[ProjetosPage] 📍 Filtros mudaram, recarregando...');
+    loadProjetos();
+  }, [loadProjetos]);
+
+  const clearFilters = useCallback(() => {
     setFilters({ search: '' });
-  };
+  }, []);
 
-  const activeFiltersCount = 
+  const activeFiltersCount = useMemo(() => 
     (filters.category ? 1 : 0) +
     (filters.workModel ? 1 : 0) +
     (filters.minBudget ? 1 : 0) +
     (filters.maxBudget ? 1 : 0) +
     (filters.location ? 1 : 0) +
-    (filters.skills && filters.skills.length > 0 ? filters.skills.length : 0);
+    (filters.skills && filters.skills.length > 0 ? filters.skills.length : 0),
+    [filters]
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-      {/* Sidebar de Filtros - Sempre visível no desktop */}
+      {/* Sidebar de Filtros */}
       <ProjectFilterSidebar
         isOpen={showSidebar}
         onClose={() => setShowSidebar(false)}
@@ -118,7 +135,7 @@ export function ProjetosPage() {
                 />
               </div>
               
-              {/* Botão de Filtros Sidebar - Mobile */}
+              {/* Botão de Filtros - Mobile */}
               <Button
                 variant={showSidebar ? 'default' : 'outline'}
                 onClick={() => setShowSidebar(!showSidebar)}

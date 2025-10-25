@@ -120,5 +120,36 @@
     "en-US": "Engleză",
     "es-ES": "Spaniolă",
     "ro-RO": "Română"
+  },
+
+  "home": {
+    "hero": {
+      "title": "Conectează-te cu cei mai buni",
+      "titleHighlight": "freelanceri",
+      "subtitle": "Găsește profesioniști calificați pentru proiectele tale sau oferă serviciile tale companiilor din întreaga Brazilie",
+      "getStarted": "Începe Acum",
+      "viewProjects": "Vezi Proiectele"
+    },
+    "stats": {
+      "projects": "Proiecte Publicate",
+      "freelancers": "Freelanceri Activi",
+      "satisfaction": "Rată de Satisfacție",
+      "totalValue": "În Proiecte"
+    },
+    "features": {
+      "title": "De ce să alegi GSeed Portal?",
+      "securePayment": {
+        "title": "Plată Securizată",
+        "description": "Sistem de escrow care protejează atât clienții cât și freelancerii"
+      },
+      "verifiedProfessionals": {
+        "title": "Profesioniști Verificați",
+        "description": "Toți freelancerii trec printr-un proces de verificare"
+      },
+      "dedicatedSupport": {
+        "title": "Suport Dedicat",
+        "description": "Echipă pregătită să ajute în toate etapele proiectului"
+      }
+    }
   }
 }

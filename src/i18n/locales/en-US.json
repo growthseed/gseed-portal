@@ -290,5 +290,36 @@
     "en-US": "English",
     "es-ES": "Spanish",
     "ro-RO": "Romanian"
+  },
+
+  "home": {
+    "hero": {
+      "title": "Connect with the best",
+      "titleHighlight": "freelancers",
+      "subtitle": "Find qualified professionals for your projects or offer your services to companies across Brazil",
+      "getStarted": "Get Started",
+      "viewProjects": "View Projects"
+    },
+    "stats": {
+      "projects": "Published Projects",
+      "freelancers": "Active Freelancers",
+      "satisfaction": "Satisfaction Rate",
+      "totalValue": "In Projects"
+    },
+    "features": {
+      "title": "Why choose GSeed Portal?",
+      "securePayment": {
+        "title": "Secure Payment",
+        "description": "Escrow system that protects both clients and freelancers"
+      },
+      "verifiedProfessionals": {
+        "title": "Verified Professionals",
+        "description": "All freelancers go through a verification process"
+      },
+      "dedicatedSupport": {
+        "title": "Dedicated Support",
+        "description": "Team ready to help at every stage of the project"
+      }
+    }
   }
 }

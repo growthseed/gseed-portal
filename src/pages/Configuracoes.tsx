@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { preferencesService } from '../services/preferencesService';
 import { authService } from '../services/authService';
+import { LanguageSwitcher } from '../components/i18n/LanguageSwitcher';
 import { toast } from 'sonner';
 import { 
   User, 
@@ -19,6 +21,7 @@ import {
 } from 'lucide-react';
 
 export default function Configuracoes() {
+  const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'geral' | 'privacidade' | 'notificacoes'>('geral');
@@ -101,28 +104,28 @@ export default function Configuracoes() {
     e.preventDefault();
     
     if (!user?.email) {
-      toast.error('Usuário não encontrado');
+      toast.error(t('settings.messages.userNotFound'));
       return;
     }
 
     // Validações
     if (!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
-      toast.error('Preencha todos os campos');
+      toast.error(t('settings.messages.fillAllFields'));
       return;
     }
 
     if (passwordForm.newPassword.length < 6) {
-      toast.error('A nova senha deve ter pelo menos 6 caracteres');
+      toast.error(t('settings.messages.passwordTooShort'));
       return;
     }
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error('As senhas não coincidem');
+      toast.error(t('settings.messages.passwordsDontMatch'));
       return;
     }
 
     if (passwordForm.oldPassword === passwordForm.newPassword) {
-      toast.error('A nova senha deve ser diferente da senha atual');
+      toast.error(t('settings.messages.passwordMustBeDifferent'));
       return;
     }
 
@@ -150,23 +153,25 @@ export default function Configuracoes() {
   };
 
   const tabs = [
-    { id: 'geral' as const, label: 'Geral', icon: User },
-    { id: 'privacidade' as const, label: 'Privacidade', icon: Shield },
-    { id: 'notificacoes' as const, label: 'Notificações', icon: Bell },
+    { id: 'geral' as const, label: t('settings.tabs.general'), icon: User },
+    { id: 'privacidade' as const, label: t('settings.tabs.privacy'), icon: Shield },
+    { id: 'notificacoes' as const, label: t('settings.tabs.notifications'), icon: Bell },
   ];
 
   const themeOptions = [
-    { value: 'light' as const, label: 'Claro', icon: Sun, description: 'Tema claro sempre ativo' },
-    { value: 'dark' as const, label: 'Escuro', icon: Moon, description: 'Tema escuro sempre ativo' },
-    { value: 'system' as const, label: 'Sistema', icon: Monitor, description: 'Segue o tema do sistema' },
+    { value: 'light' as const, label: t('settings.light'), icon: Sun, description: t('settings.lightDesc') },
+    { value: 'dark' as const, label: t('settings.dark'), icon: Moon, description: t('settings.darkDesc') },
+    { value: 'system' as const, label: t('settings.system'), icon: Monitor, description: t('settings.systemDesc') },
   ];
 
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Configurações</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          {t('settings.title')}
+        </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Gerencie suas preferências e configurações da conta
+          {t('settings.subtitle')}
         </p>
       </div>
 
@@ -203,13 +208,13 @@ export default function Configuracoes() {
               <div className="space-y-8">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                    Configurações Gerais
+                    {t('settings.general.title')}
                   </h2>
 
                   {/* Tema */}
                   <div className="mb-8">
                     <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
-                      Aparência
+                      {t('settings.appearance')}
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
                       {themeOptions.map((option) => {
@@ -250,18 +255,14 @@ export default function Configuracoes() {
 
                   {/* Idioma */}
                   <div className="mb-8">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
                       <Globe size={18} className="inline mr-2" />
-                      Idioma
-                    </label>
-                    <select className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500 focus:border-transparent">
-                      <option>Inglês</option>
-                      <option>Espanhol</option>
-                      <option disabled className="text-gray-400">Romeno (em breve)</option>
-                    </select>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      * Idioma Romeno estará disponível em breve
+                      {t('settings.language')}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      {t('settings.selectLanguage')}
                     </p>
+                    <LanguageSwitcher variant="dropdown" showLabel={true} />
                   </div>
                 </div>
 
@@ -269,13 +270,13 @@ export default function Configuracoes() {
                 <div className="pt-8 border-t border-gray-200 dark:border-gray-700">
                   <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">
                     <Lock size={18} className="inline mr-2" />
-                    Alterar Senha
+                    {t('settings.general.changePassword')}
                   </h3>
                   <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
                     <div className="relative">
                       <input
                         type={showOldPassword ? 'text' : 'password'}
-                        placeholder="Senha atual"
+                        placeholder={t('settings.general.currentPassword')}
                         value={passwordForm.oldPassword}
                         onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
                         className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500 focus:border-transparent"
@@ -292,7 +293,7 @@ export default function Configuracoes() {
                     <div className="relative">
                       <input
                         type={showNewPassword ? 'text' : 'password'}
-                        placeholder="Nova senha (mínimo 6 caracteres)"
+                        placeholder={t('settings.general.newPassword')}
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                         className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500 focus:border-transparent"
@@ -309,7 +310,7 @@ export default function Configuracoes() {
                     <div className="relative">
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirmar nova senha"
+                        placeholder={t('settings.general.confirmNewPassword')}
                         value={passwordForm.confirmPassword}
                         onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
                         className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500 focus:border-transparent"
@@ -328,7 +329,7 @@ export default function Configuracoes() {
                       disabled={changingPassword}
                       className="px-6 py-3 bg-gseed-500 hover:bg-gseed-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {changingPassword ? 'Alterando...' : 'Alterar Senha'}
+                      {changingPassword ? t('settings.general.changingPassword') : t('settings.general.changePasswordButton')}
                     </button>
                   </form>
                 </div>
@@ -339,64 +340,92 @@ export default function Configuracoes() {
             {activeTab === 'privacidade' && (
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                  Privacidade e Segurança
+                  {t('settings.privacy.title')}
                 </h2>
                 <div className="space-y-6">
-                  {Object.entries(privacidade).map(([key, value]) => {
-                    // Caso especial para profile_visibility (select)
-                    if (key === 'profile_visibility') {
-                      return (
-                        <div key={key} className="py-4 border-b border-gray-200 dark:border-gray-700">
-                          <div className="mb-3">
-                            <p className="font-medium text-gray-900 dark:text-white">
-                              Visibilidade do Perfil
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                              Defina quem pode visualizar seu perfil completo
-                            </p>
-                          </div>
-                          <select
-                            value={value as string}
-                            onChange={(e) => setPrivacidade({ ...privacidade, profile_visibility: e.target.value as 'public' | 'private' | 'connections_only' })}
-                            className="w-full max-w-xs px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500"
-                          >
-                            <option value="public">Público - Todos podem ver</option>
-                            <option value="connections_only">Apenas Conexões</option>
-                            <option value="private">Privado - Somente eu</option>
-                          </select>
-                        </div>
-                      );
-                    }
-                    
-                    // Outros campos (toggles)
-                    return (
-                    <div key={key} className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">
-                          {key === 'profile_visibility' && 'Visibilidade do Perfil'}
-                          {key === 'show_email_public' && 'Mostrar E-mail'}
-                          {key === 'show_phone_public' && 'Mostrar Telefone'}
-                          {key === 'show_whatsapp_public' && 'Mostrar WhatsApp'}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          {key === 'profile_visibility' && 'Seu perfil ficará visível para todos'}
-                          {key === 'show_email_public' && 'Seu e-mail será exibido no perfil público'}
-                          {key === 'show_phone_public' && 'Seu telefone será exibido no perfil público'}
-                          {key === 'show_whatsapp_public' && 'Seu WhatsApp será exibido no perfil público'}
-                        </p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={Boolean(value)}
-                            onChange={(e) => setPrivacidade({ ...privacidade, [key]: e.target.checked })}
-                            className="sr-only peer"
-                          />
-                        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
-                      </label>
+                  {/* Visibilidade do Perfil */}
+                  <div className="py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.privacy.profileVisibility')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.privacy.profileVisibilityDesc')}
+                      </p>
                     </div>
-                    );
-                  })}
+                    <select
+                      value={privacidade.profile_visibility}
+                      onChange={(e) => setPrivacidade({ ...privacidade, profile_visibility: e.target.value as 'public' | 'private' | 'connections_only' })}
+                      className="w-full max-w-xs px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-gseed-500"
+                    >
+                      <option value="public">{t('settings.privacy.visibilityPublic')}</option>
+                      <option value="connections_only">{t('settings.privacy.visibilityConnections')}</option>
+                      <option value="private">{t('settings.privacy.visibilityPrivate')}</option>
+                    </select>
+                  </div>
+
+                  {/* Mostrar Email */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.privacy.showEmail')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.privacy.showEmailDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacidade.show_email_public}
+                        onChange={(e) => setPrivacidade({ ...privacidade, show_email_public: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Mostrar Telefone */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.privacy.showPhone')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.privacy.showPhoneDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacidade.show_phone_public}
+                        onChange={(e) => setPrivacidade({ ...privacidade, show_phone_public: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Mostrar WhatsApp */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.privacy.showWhatsapp')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.privacy.showWhatsappDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacidade.show_whatsapp_public}
+                        onChange={(e) => setPrivacidade({ ...privacidade, show_whatsapp_public: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
                 </div>
               </div>
             )}
@@ -405,36 +434,92 @@ export default function Configuracoes() {
             {activeTab === 'notificacoes' && (
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                  Preferências de Notificações
+                  {t('settings.notifications.title')}
                 </h2>
                 <div className="space-y-6">
-                  {Object.entries(notificacoes).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">
-                          {key === 'email_new_proposals' && 'Novas Propostas'}
-                          {key === 'email_messages' && 'Mensagens'}
-                          {key === 'email_project_updates' && 'Atualizações de Projeto'}
-                          {key === 'marketing_emails' && 'Marketing e Novidades'}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          {key === 'email_new_proposals' && 'Receba notificações por e-mail quando houver novas propostas'}
-                          {key === 'email_messages' && 'Receba notificações por e-mail de novas mensagens'}
-                          {key === 'email_project_updates' && 'Seja notificado por e-mail sobre atualizações em seus projetos'}
-                          {key === 'marketing_emails' && 'Receba e-mails sobre novidades e promoções'}
-                        </p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(value)}
-                          onChange={(e) => setNotificacoes({ ...notificacoes, [key]: e.target.checked })}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
-                      </label>
+                  {/* Novas Propostas */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.notifications.newProposals')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.notifications.newProposalsDesc')}
+                      </p>
                     </div>
-                  ))}
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notificacoes.email_new_proposals}
+                        onChange={(e) => setNotificacoes({ ...notificacoes, email_new_proposals: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Mensagens */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.notifications.messages')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.notifications.messagesDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notificacoes.email_messages}
+                        onChange={(e) => setNotificacoes({ ...notificacoes, email_messages: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Atualizações de Projeto */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.notifications.projectUpdates')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.notifications.projectUpdatesDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notificacoes.email_project_updates}
+                        onChange={(e) => setNotificacoes({ ...notificacoes, email_project_updates: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Marketing e Novidades */}
+                  <div className="flex items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {t('settings.notifications.marketing')}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {t('settings.notifications.marketingDesc')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notificacoes.marketing_emails}
+                        onChange={(e) => setNotificacoes({ ...notificacoes, marketing_emails: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gseed-300 dark:peer-focus:ring-gseed-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gseed-600"></div>
+                    </label>
+                  </div>
                 </div>
               </div>
             )}
@@ -448,7 +533,7 @@ export default function Configuracoes() {
                 disabled={saving || loading}
                 className="px-8 py-3 bg-gseed-500 hover:bg-gseed-600 text-white rounded-lg font-medium transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? 'Salvando...' : 'Salvar Alterações'}
+                {saving ? t('settings.saving') : t('settings.saveChanges')}
               </button>
             </div>
           )}

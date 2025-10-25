@@ -1,0 +1,294 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "register": "Create Account",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "select": "Select",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "Optional",
+    "required": "Required"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "projects": "Projects",
+    "professionals": "Professionals",
+    "myProjects": "My Projects",
+    "myProposals": "My Proposals",
+    "receivedProposals": "Received Proposals",
+    "profile": "Profile",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "help": "Help"
+  },
+
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "createAccount": "Create Account",
+    "signInWith": "Sign in with {{provider}}",
+    "orContinueWith": "Or continue with",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "Enter your password",
+    "errors": {
+      "invalidEmail": "Invalid email",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordsDontMatch": "Passwords don't match",
+      "emailAlreadyExists": "This email is already registered",
+      "invalidCredentials": "Invalid email or password",
+      "unknownError": "Unknown error. Please try again."
+    }
+  },
+
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "personalInfo": "Personal Information",
+    "professionalInfo": "Professional Information",
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "reviews": "Reviews",
+    "name": "Name",
+    "bio": "Bio",
+    "phone": "Phone",
+    "location": "Location",
+    "church": "Church",
+    "profession": "Profession",
+    "skills": "Skills",
+    "experience": "Experience",
+    "hourlyRate": "Hourly Rate",
+    "availability": "Availability",
+    "languages": "Languages",
+    "isProfessional": "Professional Profile",
+    "activateProfessional": "Activate Professional Profile",
+    "copyProfileLink": "Copy Profile Link",
+    "linkCopied": "Link copied!"
+  },
+
+  "projects": {
+    "title": "Projects",
+    "createProject": "Create Project",
+    "createJob": "Create Job",
+    "projectType": "Type",
+    "project": "Project",
+    "job": "Job",
+    "description": "Description",
+    "budget": "Budget",
+    "deadline": "Deadline",
+    "skills": "Required Skills",
+    "category": "Category",
+    "status": "Status",
+    "open": "Open",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "viewDetails": "View Details",
+    "sendProposal": "Send Proposal",
+    "proposals": "Proposals",
+    "noProjects": "No projects found",
+    "filters": {
+      "all": "All",
+      "category": "Category",
+      "budget": "Budget",
+      "deadline": "Deadline",
+      "skills": "Skills"
+    }
+  },
+
+  "proposals": {
+    "title": "Proposals",
+    "send": "Send Proposal",
+    "myProposals": "My Proposals",
+    "receivedProposals": "Received Proposals",
+    "coverLetter": "Cover Letter",
+    "proposedValue": "Proposed Value",
+    "deliveryTime": "Delivery Time",
+    "days": "days",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "withdrawn": "Withdrawn"
+    },
+    "accept": "Accept",
+    "reject": "Reject",
+    "withdraw": "Withdraw",
+    "noProposals": "No proposals found"
+  },
+
+  "chat": {
+    "title": "Chat",
+    "messages": "Messages",
+    "conversations": "Conversations",
+    "noConversations": "No conversations yet",
+    "startConversation": "Start Conversation",
+    "typeMessage": "Type your message...",
+    "send": "Send",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "Typing...",
+    "seen": "Seen",
+    "delivered": "Delivered",
+    "translating": "Translating...",
+    "translated": "Automatically translated",
+    "showOriginal": "Show Original",
+    "showTranslation": "Show Translation",
+    "detectedLanguage": "Detected language: {{language}}"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "types": {
+      "newProposal": "New proposal received",
+      "proposalAccepted": "Your proposal was accepted",
+      "proposalRejected": "Your proposal was rejected",
+      "newMessage": "New message",
+      "projectUpdate": "Project update",
+      "newReview": "New review received"
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account settings",
+    "language": "Language",
+    "selectLanguage": "Select interface language",
+    "autoTranslate": "Auto-translate",
+    "autoTranslateDesc": "Automatically translate messages",
+    "showOriginal": "Show original text",
+    "showOriginalDesc": "Allow viewing original message",
+    "theme": "Theme",
+    "appearance": "Appearance",
+    "light": "Light",
+    "lightDesc": "Light theme always active",
+    "dark": "Dark",
+    "darkDesc": "Dark theme always active",
+    "system": "System",
+    "systemDesc": "Follow system theme",
+    "tabs": {
+      "general": "General",
+      "privacy": "Privacy",
+      "notifications": "Notifications"
+    },
+    "general": {
+      "title": "General Settings",
+      "changePassword": "Change Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password (minimum 6 characters)",
+      "confirmNewPassword": "Confirm new password",
+      "changingPassword": "Changing...",
+      "changePasswordButton": "Change Password"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "profileVisibility": "Profile Visibility",
+      "profileVisibilityDesc": "Define who can view your complete profile",
+      "visibilityPublic": "Public - Everyone can see",
+      "visibilityConnections": "Connections Only",
+      "visibilityPrivate": "Private - Only me",
+      "showEmail": "Show Email",
+      "showEmailDesc": "Your email will be displayed on public profile",
+      "showPhone": "Show Phone",
+      "showPhoneDesc": "Your phone will be displayed on public profile",
+      "showWhatsapp": "Show WhatsApp",
+      "showWhatsappDesc": "Your WhatsApp will be displayed on public profile"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "newProposals": "New Proposals",
+      "newProposalsDesc": "Receive email notifications when there are new proposals",
+      "messages": "Messages",
+      "messagesDesc": "Receive email notifications of new messages",
+      "projectUpdates": "Project Updates",
+      "projectUpdatesDesc": "Be notified by email about updates on your projects",
+      "marketing": "Marketing & News",
+      "marketingDesc": "Receive emails about news and promotions"
+    },
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "emailNotifications": "Email Notifications",
+    "pushNotifications": "Push Notifications",
+    "account": "Account",
+    "deleteAccount": "Delete Account",
+    "messages": {
+      "userNotFound": "User not found",
+      "fillAllFields": "Fill in all fields",
+      "passwordTooShort": "New password must be at least 6 characters",
+      "passwordsDontMatch": "Passwords don't match",
+      "passwordMustBeDifferent": "New password must be different from current password"
+    }
+  },
+
+  "errors": {
+    "general": "An error occurred. Please try again.",
+    "network": "Connection error. Check your internet.",
+    "unauthorized": "You don't have permission for this.",
+    "notFound": "Not found.",
+    "validation": "Please fill in all required fields.",
+    "uploadFailed": "Upload failed. Please try again.",
+    "tryAgain": "Try Again"
+  },
+
+  "success": {
+    "saved": "Saved successfully!",
+    "updated": "Updated successfully!",
+    "deleted": "Deleted successfully!",
+    "sent": "Sent successfully!",
+    "uploaded": "Uploaded successfully!"
+  },
+
+  "placeholders": {
+    "searchProjects": "Search projects...",
+    "searchProfessionals": "Search professionals...",
+    "enterDescription": "Enter a description...",
+    "selectCategory": "Select a category",
+    "selectSkills": "Select skills"
+  },
+
+  "time": {
+    "now": "Now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "weeksAgo": "{{count}}w ago",
+    "monthsAgo": "{{count}}mo ago"
+  },
+
+  "languages": {
+    "pt-BR": "Portuguese",
+    "en-US": "English",
+    "es-ES": "Spanish",
+    "ro-RO": "Romanian"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "common": {
+    "welcome": "Bun venit",
+    "login": "Conectare",
+    "logout": "Deconectare",
+    "register": "Creează Cont",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "search": "Caută",
+    "filter": "Filtrează",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "previous": "Anterior",
+    "finish": "Finalizează",
+    "view": "Vizualizează",
+    "download": "Descarcă",
+    "upload": "Încarcă",
+    "select": "Selectează",
+    "all": "Toate",
+    "none": "Niciunul",
+    "yes": "Da",
+    "no": "Nu",
+    "optional": "Opțional",
+    "required": "Obligatoriu"
+  },
+
+  "navigation": {
+    "home": "Acasă",
+    "projects": "Proiecte",
+    "professionals": "Profesioniști",
+    "myProjects": "Proiectele Mele",
+    "myProposals": "Propunerile Mele",
+    "receivedProposals": "Propuneri Primite",
+    "profile": "Profil",
+    "settings": "Setări",
+    "notifications": "Notificări",
+    "messages": "Mesaje",
+    "help": "Ajutor"
+  },
+
+  "settings": {
+    "title": "Setări",
+    "subtitle": "Gestionează preferințele și setările contului",
+    "language": "Limbă",
+    "selectLanguage": "Selectează limba interfeței",
+    "autoTranslate": "Traducere automată",
+    "autoTranslateDesc": "Traduce mesajele automat",
+    "showOriginal": "Arată textul original",
+    "showOriginalDesc": "Permite vizualizarea mesajului original",
+    "theme": "Temă",
+    "appearance": "Aspect",
+    "light": "Luminos",
+    "lightDesc": "Tema luminoasă întotdeauna activă",
+    "dark": "Întunecat",
+    "darkDesc": "Tema întunecată întotdeauna activă",
+    "system": "Sistem",
+    "systemDesc": "Urmează tema sistemului",
+    "tabs": {
+      "general": "General",
+      "privacy": "Confidențialitate",
+      "notifications": "Notificări"
+    },
+    "general": {
+      "title": "Setări Generale",
+      "changePassword": "Schimbă Parola",
+      "currentPassword": "Parola actuală",
+      "newPassword": "Parola nouă (minimum 6 caractere)",
+      "confirmNewPassword": "Confirmă parola nouă",
+      "changingPassword": "Se schimbă...",
+      "changePasswordButton": "Schimbă Parola"
+    },
+    "privacy": {
+      "title": "Confidențialitate și Securitate",
+      "profileVisibility": "Vizibilitatea Profilului",
+      "profileVisibilityDesc": "Definește cine poate vedea profilul tău complet",
+      "visibilityPublic": "Public - Toată lumea poate vedea",
+      "visibilityConnections": "Doar Conexiuni",
+      "visibilityPrivate": "Privat - Doar eu",
+      "showEmail": "Arată Email-ul",
+      "showEmailDesc": "Email-ul tău va fi afișat pe profilul public",
+      "showPhone": "Arată Telefonul",
+      "showPhoneDesc": "Telefonul tău va fi afișat pe profilul public",
+      "showWhatsapp": "Arată WhatsApp",
+      "showWhatsappDesc": "WhatsApp-ul tău va fi afișat pe profilul public"
+    },
+    "notifications": {
+      "title": "Preferințe de Notificare",
+      "newProposals": "Propuneri Noi",
+      "newProposalsDesc": "Primește notificări prin email când sunt propuneri noi",
+      "messages": "Mesaje",
+      "messagesDesc": "Primește notificări prin email pentru mesaje noi",
+      "projectUpdates": "Actualizări Proiect",
+      "projectUpdatesDesc": "Fii notificat prin email despre actualizările proiectelor tale",
+      "marketing": "Marketing și Noutăți",
+      "marketingDesc": "Primește email-uri despre noutăți și promoții"
+    },
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează Modificările",
+    "emailNotifications": "Notificări prin Email",
+    "pushNotifications": "Notificări Push",
+    "account": "Cont",
+    "deleteAccount": "Șterge Contul",
+    "messages": {
+      "userNotFound": "Utilizator negăsit",
+      "fillAllFields": "Completează toate câmpurile",
+      "passwordTooShort": "Parola nouă trebuie să aibă cel puțin 6 caractere",
+      "passwordsDontMatch": "Parolele nu se potrivesc",
+      "passwordMustBeDifferent": "Parola nouă trebuie să fie diferită de parola actuală"
+    }
+  },
+
+  "languages": {
+    "pt-BR": "Portugheză",
+    "en-US": "Engleză",
+    "es-ES": "Spaniolă",
+    "ro-RO": "Română"
+  }
+}

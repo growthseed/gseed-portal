@@ -1,0 +1,124 @@
+{
+  "common": {
+    "welcome": "Bienvenido",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Crear Cuenta",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "finish": "Finalizar",
+    "view": "Ver",
+    "download": "Descargar",
+    "upload": "Subir",
+    "select": "Seleccionar",
+    "all": "Todos",
+    "none": "Ninguno",
+    "yes": "Sí",
+    "no": "No",
+    "optional": "Opcional",
+    "required": "Obligatorio"
+  },
+
+  "navigation": {
+    "home": "Inicio",
+    "projects": "Proyectos",
+    "professionals": "Profesionales",
+    "myProjects": "Mis Proyectos",
+    "myProposals": "Mis Propuestas",
+    "receivedProposals": "Propuestas Recibidas",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "notifications": "Notificaciones",
+    "messages": "Mensajes",
+    "help": "Ayuda"
+  },
+
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra tus preferencias y configuración de cuenta",
+    "language": "Idioma",
+    "selectLanguage": "Selecciona el idioma de la interfaz",
+    "autoTranslate": "Traducción automática",
+    "autoTranslateDesc": "Traducir mensajes automáticamente",
+    "showOriginal": "Mostrar texto original",
+    "showOriginalDesc": "Permitir ver mensaje original",
+    "theme": "Tema",
+    "appearance": "Apariencia",
+    "light": "Claro",
+    "lightDesc": "Tema claro siempre activo",
+    "dark": "Oscuro",
+    "darkDesc": "Tema oscuro siempre activo",
+    "system": "Sistema",
+    "systemDesc": "Seguir el tema del sistema",
+    "tabs": {
+      "general": "General",
+      "privacy": "Privacidad",
+      "notifications": "Notificaciones"
+    },
+    "general": {
+      "title": "Configuración General",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña (mínimo 6 caracteres)",
+      "confirmNewPassword": "Confirmar nueva contraseña",
+      "changingPassword": "Cambiando...",
+      "changePasswordButton": "Cambiar Contraseña"
+    },
+    "privacy": {
+      "title": "Privacidad y Seguridad",
+      "profileVisibility": "Visibilidad del Perfil",
+      "profileVisibilityDesc": "Define quién puede ver tu perfil completo",
+      "visibilityPublic": "Público - Todos pueden ver",
+      "visibilityConnections": "Solo Conexiones",
+      "visibilityPrivate": "Privado - Solo yo",
+      "showEmail": "Mostrar Email",
+      "showEmailDesc": "Tu email se mostrará en el perfil público",
+      "showPhone": "Mostrar Teléfono",
+      "showPhoneDesc": "Tu teléfono se mostrará en el perfil público",
+      "showWhatsapp": "Mostrar WhatsApp",
+      "showWhatsappDesc": "Tu WhatsApp se mostrará en el perfil público"
+    },
+    "notifications": {
+      "title": "Preferencias de Notificaciones",
+      "newProposals": "Nuevas Propuestas",
+      "newProposalsDesc": "Recibe notificaciones por email cuando haya nuevas propuestas",
+      "messages": "Mensajes",
+      "messagesDesc": "Recibe notificaciones por email de nuevos mensajes",
+      "projectUpdates": "Actualizaciones de Proyecto",
+      "projectUpdatesDesc": "Recibe notificaciones por email sobre actualizaciones en tus proyectos",
+      "marketing": "Marketing y Novedades",
+      "marketingDesc": "Recibe emails sobre novedades y promociones"
+    },
+    "saving": "Guardando...",
+    "saveChanges": "Guardar Cambios",
+    "emailNotifications": "Notificaciones por Email",
+    "pushNotifications": "Notificaciones Push",
+    "account": "Cuenta",
+    "deleteAccount": "Eliminar Cuenta",
+    "messages": {
+      "userNotFound": "Usuario no encontrado",
+      "fillAllFields": "Completa todos los campos",
+      "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+      "passwordsDontMatch": "Las contraseñas no coinciden",
+      "passwordMustBeDifferent": "La nueva contraseña debe ser diferente de la contraseña actual"
+    }
+  },
+
+  "languages": {
+    "pt-BR": "Portugués",
+    "en-US": "Inglés",
+    "es-ES": "Español",
+    "ro-RO": "Rumano"
+  }
+}

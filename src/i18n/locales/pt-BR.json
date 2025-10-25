@@ -1,0 +1,294 @@
+{
+  "common": {
+    "welcome": "Bem-vindo",
+    "login": "Entrar",
+    "logout": "Sair",
+    "register": "Criar Conta",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "finish": "Concluir",
+    "view": "Visualizar",
+    "download": "Baixar",
+    "upload": "Enviar",
+    "select": "Selecionar",
+    "all": "Todos",
+    "none": "Nenhum",
+    "yes": "Sim",
+    "no": "Não",
+    "optional": "Opcional",
+    "required": "Obrigatório"
+  },
+
+  "navigation": {
+    "home": "Início",
+    "projects": "Projetos",
+    "professionals": "Profissionais",
+    "myProjects": "Meus Projetos",
+    "myProposals": "Minhas Propostas",
+    "receivedProposals": "Propostas Recebidas",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "notifications": "Notificações",
+    "messages": "Mensagens",
+    "help": "Ajuda"
+  },
+
+  "auth": {
+    "signIn": "Entrar",
+    "signUp": "Criar Conta",
+    "signOut": "Sair",
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "dontHaveAccount": "Não tem uma conta?",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "createAccount": "Criar Conta",
+    "signInWith": "Entrar com {{provider}}",
+    "orContinueWith": "Ou continue com",
+    "emailPlaceholder": "seu@email.com",
+    "passwordPlaceholder": "Digite sua senha",
+    "errors": {
+      "invalidEmail": "E-mail inválido",
+      "passwordTooShort": "Senha deve ter no mínimo 6 caracteres",
+      "passwordsDontMatch": "As senhas não coincidem",
+      "emailAlreadyExists": "Este e-mail já está cadastrado",
+      "invalidCredentials": "E-mail ou senha incorretos",
+      "unknownError": "Erro desconhecido. Tente novamente."
+    }
+  },
+
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "personalInfo": "Informações Pessoais",
+    "professionalInfo": "Informações Profissionais",
+    "portfolio": "Portfólio",
+    "services": "Serviços",
+    "reviews": "Avaliações",
+    "name": "Nome",
+    "bio": "Biografia",
+    "phone": "Telefone",
+    "location": "Localização",
+    "church": "Igreja",
+    "profession": "Profissão",
+    "skills": "Habilidades",
+    "experience": "Experiência",
+    "hourlyRate": "Valor/Hora",
+    "availability": "Disponibilidade",
+    "languages": "Idiomas",
+    "isProfessional": "Perfil Profissional",
+    "activateProfessional": "Ativar Perfil Profissional",
+    "copyProfileLink": "Copiar Link do Perfil",
+    "linkCopied": "Link copiado!"
+  },
+
+  "projects": {
+    "title": "Projetos",
+    "createProject": "Criar Projeto",
+    "createJob": "Criar Vaga",
+    "projectType": "Tipo",
+    "project": "Projeto",
+    "job": "Vaga",
+    "description": "Descrição",
+    "budget": "Orçamento",
+    "deadline": "Prazo",
+    "skills": "Habilidades Necessárias",
+    "category": "Categoria",
+    "status": "Status",
+    "open": "Aberto",
+    "inProgress": "Em Andamento",
+    "completed": "Concluído",
+    "cancelled": "Cancelado",
+    "viewDetails": "Ver Detalhes",
+    "sendProposal": "Enviar Proposta",
+    "proposals": "Propostas",
+    "noProjects": "Nenhum projeto encontrado",
+    "filters": {
+      "all": "Todos",
+      "category": "Categoria",
+      "budget": "Orçamento",
+      "deadline": "Prazo",
+      "skills": "Habilidades"
+    }
+  },
+
+  "proposals": {
+    "title": "Propostas",
+    "send": "Enviar Proposta",
+    "myProposals": "Minhas Propostas",
+    "receivedProposals": "Propostas Recebidas",
+    "coverLetter": "Carta de Apresentação",
+    "proposedValue": "Valor Proposto",
+    "deliveryTime": "Prazo de Entrega",
+    "days": "dias",
+    "status": {
+      "pending": "Pendente",
+      "accepted": "Aceita",
+      "rejected": "Rejeitada",
+      "withdrawn": "Retirada"
+    },
+    "accept": "Aceitar",
+    "reject": "Rejeitar",
+    "withdraw": "Retirar",
+    "noProposals": "Nenhuma proposta encontrada"
+  },
+
+  "chat": {
+    "title": "Chat",
+    "messages": "Mensagens",
+    "conversations": "Conversas",
+    "noConversations": "Nenhuma conversa ainda",
+    "startConversation": "Iniciar Conversa",
+    "typeMessage": "Digite sua mensagem...",
+    "send": "Enviar",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "Digitando...",
+    "seen": "Visto",
+    "delivered": "Entregue",
+    "translating": "Traduzindo...",
+    "translated": "Traduzido automaticamente",
+    "showOriginal": "Ver Original",
+    "showTranslation": "Ver Tradução",
+    "detectedLanguage": "Idioma detectado: {{language}}"
+  },
+
+  "notifications": {
+    "title": "Notificações",
+    "markAllAsRead": "Marcar todas como lidas",
+    "noNotifications": "Nenhuma notificação",
+    "types": {
+      "newProposal": "Nova proposta recebida",
+      "proposalAccepted": "Sua proposta foi aceita",
+      "proposalRejected": "Sua proposta foi rejeitada",
+      "newMessage": "Nova mensagem",
+      "projectUpdate": "Atualização no projeto",
+      "newReview": "Nova avaliação recebida"
+    }
+  },
+
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Gerencie suas preferências e configurações da conta",
+    "language": "Idioma",
+    "selectLanguage": "Selecione o idioma da interface",
+    "autoTranslate": "Tradução automática",
+    "autoTranslateDesc": "Traduzir mensagens automaticamente",
+    "showOriginal": "Mostrar texto original",
+    "showOriginalDesc": "Permitir visualizar mensagem original",
+    "theme": "Tema",
+    "appearance": "Aparência",
+    "light": "Claro",
+    "lightDesc": "Tema claro sempre ativo",
+    "dark": "Escuro",
+    "darkDesc": "Tema escuro sempre ativo",
+    "system": "Sistema",
+    "systemDesc": "Segue o tema do sistema",
+    "tabs": {
+      "general": "Geral",
+      "privacy": "Privacidade",
+      "notifications": "Notificações"
+    },
+    "general": {
+      "title": "Configurações Gerais",
+      "changePassword": "Alterar Senha",
+      "currentPassword": "Senha atual",
+      "newPassword": "Nova senha (mínimo 6 caracteres)",
+      "confirmNewPassword": "Confirmar nova senha",
+      "changingPassword": "Alterando...",
+      "changePasswordButton": "Alterar Senha"
+    },
+    "privacy": {
+      "title": "Privacidade e Segurança",
+      "profileVisibility": "Visibilidade do Perfil",
+      "profileVisibilityDesc": "Defina quem pode visualizar seu perfil completo",
+      "visibilityPublic": "Público - Todos podem ver",
+      "visibilityConnections": "Apenas Conexões",
+      "visibilityPrivate": "Privado - Somente eu",
+      "showEmail": "Mostrar E-mail",
+      "showEmailDesc": "Seu e-mail será exibido no perfil público",
+      "showPhone": "Mostrar Telefone",
+      "showPhoneDesc": "Seu telefone será exibido no perfil público",
+      "showWhatsapp": "Mostrar WhatsApp",
+      "showWhatsappDesc": "Seu WhatsApp será exibido no perfil público"
+    },
+    "notifications": {
+      "title": "Preferências de Notificações",
+      "newProposals": "Novas Propostas",
+      "newProposalsDesc": "Receba notificações por e-mail quando houver novas propostas",
+      "messages": "Mensagens",
+      "messagesDesc": "Receba notificações por e-mail de novas mensagens",
+      "projectUpdates": "Atualizações de Projeto",
+      "projectUpdatesDesc": "Seja notificado por e-mail sobre atualizações em seus projetos",
+      "marketing": "Marketing e Novidades",
+      "marketingDesc": "Receba e-mails sobre novidades e promoções"
+    },
+    "saving": "Salvando...",
+    "saveChanges": "Salvar Alterações",
+    "emailNotifications": "Notificações por E-mail",
+    "pushNotifications": "Notificações Push",
+    "account": "Conta",
+    "deleteAccount": "Excluir Conta",
+    "messages": {
+      "userNotFound": "Usuário não encontrado",
+      "fillAllFields": "Preencha todos os campos",
+      "passwordTooShort": "A nova senha deve ter pelo menos 6 caracteres",
+      "passwordsDontMatch": "As senhas não coincidem",
+      "passwordMustBeDifferent": "A nova senha deve ser diferente da senha atual"
+    }
+  },
+
+  "errors": {
+    "general": "Ocorreu um erro. Tente novamente.",
+    "network": "Erro de conexão. Verifique sua internet.",
+    "unauthorized": "Você não tem permissão para isso.",
+    "notFound": "Não encontrado.",
+    "validation": "Por favor, preencha todos os campos obrigatórios.",
+    "uploadFailed": "Falha no upload. Tente novamente.",
+    "tryAgain": "Tentar Novamente"
+  },
+
+  "success": {
+    "saved": "Salvo com sucesso!",
+    "updated": "Atualizado com sucesso!",
+    "deleted": "Excluído com sucesso!",
+    "sent": "Enviado com sucesso!",
+    "uploaded": "Upload realizado com sucesso!"
+  },
+
+  "placeholders": {
+    "searchProjects": "Buscar projetos...",
+    "searchProfessionals": "Buscar profissionais...",
+    "enterDescription": "Digite uma descrição...",
+    "selectCategory": "Selecione uma categoria",
+    "selectSkills": "Selecione as habilidades"
+  },
+
+  "time": {
+    "now": "Agora",
+    "minutesAgo": "{{count}} min atrás",
+    "hoursAgo": "{{count}}h atrás",
+    "daysAgo": "{{count}}d atrás",
+    "weeksAgo": "{{count}}sem atrás",
+    "monthsAgo": "{{count}}m atrás"
+  },
+
+  "languages": {
+    "pt-BR": "Português",
+    "en-US": "English",
+    "es-ES": "Español",
+    "ro-RO": "Română"
+  }
+}

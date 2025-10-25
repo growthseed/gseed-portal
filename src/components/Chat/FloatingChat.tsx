@@ -340,7 +340,7 @@ export function FloatingChat({ recipientId, onClose }: FloatingChatProps) {
                         }`}
                       >
                         {formatMessageTime(message.created_at)}
-                        {isMine && message.read && ' • Lida'}
+                        {isMine && (message.read || message.is_read) && ' • Lida'}
                       </p>
                     </div>
                   </div>

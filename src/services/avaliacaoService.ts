@@ -90,22 +90,27 @@ class AvaliacaoService {
       }
 
       // Transformar o resultado para o formato esperado
-      return (data || []).map(item => ({
-        id: item.id,
-        professional_id: item.professional_id,
-        client_id: item.client_id,
-        rating: item.rating,
-        comment: item.comment,
-        response: item.response,
-        responded_at: item.responded_at,
-        created_at: item.created_at,
-        updated_at: item.updated_at,
-        client: item.profiles ? {
-          id: item.profiles.id,
-          name: item.profiles.name,
-          avatar_url: item.profiles.avatar_url
-        } : undefined
-      }));
+      return (data || []).map((item) => {
+        // Garantir que profiles é um objeto único, não um array
+        const profile = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles;
+        
+        return {
+          id: item.id,
+          professional_id: item.professional_id,
+          client_id: item.client_id,
+          rating: item.rating,
+          comment: item.comment,
+          response: item.response,
+          responded_at: item.responded_at,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          client: profile ? {
+            id: profile.id,
+            name: profile.name,
+            avatar_url: profile.avatar_url
+          } : undefined
+        };
+      });
     } catch (error) {
       console.error('Erro ao buscar avaliações:', error);
       return [];

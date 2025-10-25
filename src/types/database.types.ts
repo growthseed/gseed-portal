@@ -193,6 +193,20 @@ export interface Message {
   updated_at?: string;
 }
 
+// Alias para ChatMessage (usado no FloatingChat)
+export interface ChatMessage {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  attachments?: string[];
+  read?: boolean; // Alias para is_read
+  is_read?: boolean; // Campo original do banco
+  read_at?: string;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface Notification {
   id: string;
   user_id: string;

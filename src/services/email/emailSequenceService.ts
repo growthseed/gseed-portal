@@ -14,14 +14,14 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// IMPORTANTE: Após criar os templates no Brevo, atualize esses IDs
+// ✅ IDs ATUALIZADOS - Templates criados no Brevo
 const BREVO_TEMPLATE_IDS = {
-  welcome: 1,              // Atualizar com ID real do Brevo
-  completeProfile: 2,      // Atualizar com ID real do Brevo
-  firstProject: 3,         // Atualizar com ID real do Brevo
-  findProfessionals: 4,    // Atualizar com ID real do Brevo
-  effectiveProposals: 5,   // Atualizar com ID real do Brevo
-  successCases: 6          // Atualizar com ID real do Brevo
+  welcome: 7,              // ✅ Gseed - 1. Bem-vindo
+  completeProfile: 8,      // ✅ Gseed - 2. Complete seu Perfil
+  firstProject: 9,         // ✅ Gseed - 3. Crie seu Primeiro Projeto
+  findProfessionals: 10,   // ✅ Gseed - 4. Como Encontrar Profissionais
+  effectiveProposals: 12,  // ✅ Gseed - 5. Dicas para Propostas Efetivas
+  successCases: 13         // ✅ Gseed - 6. Cases de Sucesso
 } as const;
 
 interface EmailSequence {

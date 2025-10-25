@@ -4,7 +4,10 @@ import { PublicLayout } from './components/layout/PublicLayout';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import OnboardingFlow from './components/onboarding';
+import Onboarding from './pages/Onboarding';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
 import AuthCallback from './pages/AuthCallback';
 import ProfissionaisPage from './pages/ProfissionaisPage';
 import ProjetosPage from './pages/ProjetosPage';
@@ -17,7 +20,7 @@ import MeusProjetos from './pages/MeusProjetos';
 import CriarProjeto from './pages/CriarProjeto';
 import CriarVaga from './pages/CriarVaga';
 import PropostasRecebidas from './pages/PropostasRecebidas';
-import Notificacoes from './pages/Notificacoes';
+import Notifications from './pages/Notifications';
 import ChatPage from './pages/Chat';
 import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
@@ -86,10 +89,23 @@ function App() {
 
             {/* Rotas de Autenticação */}
             <Route path="/login" element={user ? <Navigate to="/perfil" /> : <Login />} />
-            <Route path="/cadastro" element={user ? <Navigate to="/perfil" /> : <OnboardingFlow />} />
-            <Route path="/register" element={user ? <Navigate to="/perfil" /> : <OnboardingFlow />} />
+            <Route path="/cadastro" element={user ? <Navigate to="/perfil" /> : <Register />} />
+            <Route path="/register" element={user ? <Navigate to="/perfil" /> : <Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/dashboard" element={<Navigate to="/perfil" replace />} />
+
+            {/* Rota de Onboarding - NOVA */}
+            <Route 
+              path="/onboarding" 
+              element={
+                user ? (
+                  <Onboarding />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              } 
+            />
 
             {/* Rotas PROTEGIDAS - Detalhes e Interações */}
             <Route
@@ -205,7 +221,7 @@ function App() {
               element={
                 user ? (
                   <Layout>
-                    <Notificacoes />
+                    <Notifications />
                   </Layout>
                 ) : (
                   <Navigate to="/login" />

@@ -337,12 +337,12 @@ export function ProfissionaisPage() {
                     {profissional.avatar_url ? (
                       <img 
                         src={profissional.avatar_url} 
-                        alt={profissional.full_name}
+                        alt={profissional.name}
                         className="w-20 h-20 rounded-full object-cover ring-4 ring-white dark:ring-gray-800"
                       />
                     ) : (
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gseed-500 to-gseed-600 flex items-center justify-center text-white text-2xl font-bold ring-4 ring-white dark:ring-gray-800">
-                        {profissional.full_name?.charAt(0) || '?'}
+                        {profissional.name?.charAt(0) || '?'}
                       </div>
                     )}
                   </div>
@@ -352,7 +352,7 @@ export function ProfissionaisPage() {
                   {/* Nome & Título */}
                   <div className="mb-3">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-gseed-600 dark:group-hover:text-gseed-400 transition-colors">
-                      {profissional.full_name}
+                      {profissional.name}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {profissional.professional_title || 'Profissional'}
@@ -361,24 +361,17 @@ export function ProfissionaisPage() {
 
                   {/* Stats */}
                   <div className="flex items-center gap-4 mb-3 text-sm text-gray-600 dark:text-gray-400">
-                    {profissional.rating && (
-                      <div className="flex items-center gap-1">
-                        <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                        <span className="font-semibold">{profissional.rating.toFixed(1)}</span>
-                      </div>
-                    )}
                     <div className="flex items-center gap-1">
                       <Briefcase size={14} />
-                      <span>{profissional.completed_projects || 0}</span>
+                      <span>{profissional.views_count || 0} visualizações</span>
                     </div>
                   </div>
 
-                  {/* Localização */}
-                  {profissional.location_city && (
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                      <MapPin size={14} />
-                      <span>{profissional.location_city}, {profissional.location_state}</span>
-                    </div>
+                  {/* Bio */}
+                  {profissional.professional_bio && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                      {profissional.professional_bio}
+                    </p>
                   )}
 
                   {/* Skills */}
@@ -402,12 +395,12 @@ export function ProfissionaisPage() {
                     <div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">A partir de</div>
                       <div className="font-semibold text-gray-900 dark:text-white">
-                        {formatCurrency(profissional.hourly_rate)}/h
+                        {formatCurrency(profissional.hourly_rate ? Number(profissional.hourly_rate) : undefined)}/h
                       </div>
                     </div>
                     
-                    <Badge variant={profissional.is_available ? 'success' : 'secondary'}>
-                      {profissional.is_available ? 'Disponível' : 'Ocupado'}
+                    <Badge variant={(profissional.availability === 'freelance' || profissional.availability === 'part_time') ? 'success' : 'secondary'}>
+                      {(profissional.availability === 'freelance' || profissional.availability === 'part_time') ? 'Disponível' : 'Ocupado'}
                     </Badge>
                   </div>
                 </div>

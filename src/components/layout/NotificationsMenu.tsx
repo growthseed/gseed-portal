@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Check, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { notificationService, type Notification } from '@/services/notificationService';
+import { notificationService, type Notification } from '@/services/notifications/notificationService';
 import { supabase } from '@/lib/supabase';
 
 export function NotificationsMenu() {
@@ -39,7 +39,7 @@ export function NotificationsMenu() {
   const loadNotifications = async () => {
     try {
       setLoading(true);
-      const data = await notificationService.getUserNotifications(20);
+      const data = await notificationService.getUserNotifications(undefined, 20);
       setNotifications(data);
     } catch (error) {
       console.error('Erro ao carregar notificações:', error);
@@ -57,15 +57,20 @@ export function NotificationsMenu() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const unsubscribe = notificationService.subscribeToNotifications(
+    const subscription = notificationService.subscribeToNotifications(
       user.id,
       (newNotification) => {
         setNotifications(prev => [newNotification, ...prev]);
         setUnreadCount(prev => prev + 1);
+        
+        // Opcional: Tocar som de notificação
+        // playNotificationSound();
       }
     );
 
-    return unsubscribe;
+    return () => {
+      subscription.unsubscribe();
+    };
   };
 
   const handleNotificationClick = async (notification: Notification) => {
@@ -78,14 +83,23 @@ export function NotificationsMenu() {
       );
     }
 
-    // Navegar baseado no tipo
-    if (notification.data?.proposalId) {
-      navigate('/propostas');
-    } else if (notification.data?.projectId) {
-      navigate(`/projetos/${notification.data.projectId}`);
-    } else if (notification.data?.conversationId) {
-      // Navegar para chat quando implementado
-      console.log('Navigate to chat:', notification.data.conversationId);
+    // Navegar baseado no tipo e dados
+    const { data, type } = notification;
+    
+    if (type === 'new_message' && data?.conversation_id) {
+      // Navegar para o chat específico
+      navigate(`/mensagens?conversation=${data.conversation_id}`);
+    } else if (type === 'new_project' && data?.project_id) {
+      // Navegar para o projeto específico
+      navigate(`/projetos/${data.project_id}`);
+    } else if (type === 'proposal_received' && data?.proposal_id) {
+      navigate(`/propostas/${data.proposal_id}`);
+    } else if (type === 'proposal_accepted' && data?.proposal_id) {
+      navigate(`/propostas/${data.proposal_id}`);
+    } else if (type === 'proposal_rejected' && data?.proposal_id) {
+      navigate(`/propostas/${data.proposal_id}`);
+    } else if (data?.project_id) {
+      navigate(`/projetos/${data.project_id}`);
     }
 
     setIsOpen(false);
@@ -119,14 +133,24 @@ export function NotificationsMenu() {
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'proposal':
-        return '📝';
-      case 'project':
-        return '💼';
+      case 'proposal_received':
+        return '📨';
+      case 'proposal_accepted':
+        return '🎉';
+      case 'proposal_rejected':
+        return '❌';
+      case 'new_message':
+        return '💬';
       case 'message':
         return '💬';
+      case 'new_project':
+        return '💼';
+      case 'project':
+        return '💼';
       case 'payment':
         return '💰';
+      case 'system':
+        return '🔔';
       default:
         return '🔔';
     }
@@ -138,6 +162,7 @@ export function NotificationsMenu() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors"
+        aria-label="Notificações"
       >
         <Bell size={20} className="text-gray-700 dark:text-gray-300" />
         {unreadCount > 0 && (
@@ -188,16 +213,16 @@ export function NotificationsMenu() {
                     <span className="text-2xl flex-shrink-0">
                       {getNotificationIcon(notification.type)}
                     </span>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <p className="text-gray-900 dark:text-white text-sm font-medium">
+                        <p className="text-gray-900 dark:text-white text-sm font-medium line-clamp-1">
                           {notification.title}
                         </p>
                         {!notification.is_read && (
                           <div className="w-2 h-2 rounded-full bg-gseed-500 flex-shrink-0 mt-1.5" />
                         )}
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400 text-xs mb-2">
+                      <p className="text-gray-600 dark:text-gray-400 text-xs mb-2 line-clamp-2">
                         {notification.message}
                       </p>
                       <p className="text-gray-400 dark:text-gray-500 text-xs">

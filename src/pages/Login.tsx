@@ -89,9 +89,13 @@ export default function Login() {
                   placeholder="seu@email.com"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className={`pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
-                    errors.email ? 'border-red-500 focus:ring-red-500' : ''
+                  className={`pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-gseed-500 focus:border-gseed-500 dark:focus:ring-gseed-400 dark:focus:border-gseed-400 ${
+                    errors.email ? 'border-red-500 focus:ring-red-500 dark:border-red-500 dark:focus:ring-red-500' : ''
                   }`}
+                  style={{
+                    WebkitTextFillColor: 'inherit',
+                    WebkitBoxShadow: '0 0 0 1000px transparent inset'
+                  }}
                 />
               </div>
               {errors.email && (
@@ -111,9 +115,13 @@ export default function Login() {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => handleChange('password', e.target.value)}
-                  className={`pl-10 pr-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
-                    errors.password ? 'border-red-500 focus:ring-red-500' : ''
+                  className={`pl-10 pr-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-gseed-500 focus:border-gseed-500 dark:focus:ring-gseed-400 dark:focus:border-gseed-400 ${
+                    errors.password ? 'border-red-500 focus:ring-red-500 dark:border-red-500 dark:focus:ring-red-500' : ''
                   }`}
+                  style={{
+                    WebkitTextFillColor: 'inherit',
+                    WebkitBoxShadow: '0 0 0 1000px transparent inset'
+                  }}
                 />
                 <button
                   type="button"
@@ -133,7 +141,7 @@ export default function Login() {
               <label className="flex items-center space-x-2 cursor-pointer">
                 <input 
                   type="checkbox" 
-                  className="rounded border-gray-300 dark:border-gray-600 text-gseed-600 focus:ring-gseed-500 dark:bg-gray-700"
+                  className="rounded border-gray-300 dark:border-gray-600 text-gseed-600 focus:ring-gseed-500 dark:bg-gray-700 dark:checked:bg-gseed-600"
                 />
                 <span className="text-sm text-gray-600 dark:text-gray-400">Lembrar de mim</span>
               </label>

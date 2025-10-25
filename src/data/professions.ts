@@ -189,38 +189,83 @@ export const professionCategories = {
       "Relacionamento"
     ]
   },
-  "Jurídico e Contabilidade": {
+  "Jurídico": {
     icon: "⚖️",
     specialties: [
-      "Advogado(a)",
-      "Contador(a)",
+      "Advogado(a) Civil",
+      "Advogado(a) Trabalhista",
+      "Advogado(a) Empresarial",
+      "Advogado(a) Tributário",
+      "Advogado(a) Criminal",
+      "Advogado(a) Família (Divórcio)",
+      "Advogado(a) Imobiliário",
       "Consultor(a) Jurídico",
       "Paralegal",
       "Assessor(a) Jurídico",
-      "Compliance",
-      "Consultor(a) de Investimentos",
-      "Gestão Financeira"
+      "Compliance"
     ],
     skills: [
       "Direito Civil",
       "Direito Trabalhista",
       "Direito Empresarial",
       "Direito Tributário",
+      "Direito Criminal",
+      "Direito de Família",
+      "Divórcio",
+      "Guarda de Filhos",
+      "Pensão Alimentícia",
+      "Direito Imobiliário",
       "Contratos",
       "Consultoria Jurídica",
-      "Contabilidade",
+      "Compliance",
+      "LGPD",
+      "Due Diligence",
+      "Registro de Marcas",
+      "Propriedade Intelectual",
+      "Mediação",
+      "Arbitragem"
+    ]
+  },
+  "Contabilidade e Finanças": {
+    icon: "💰",
+    specialties: [
+      "Contador(a)",
+      "Analista Contábil",
+      "Consultor(a) Tributário",
+      "Abertura de Empresa",
+      "Gestão Contábil",
+      "Auditor(a)",
+      "Controller",
+      "Analista Financeiro",
+      "Planejamento Tributário",
+      "Consultor(a) de Investimentos"
+    ],
+    skills: [
+      "Contabilidade Geral",
+      "Abertura de Empresa",
+      "Alteração Contratual",
+      "Baixa de Empresa",
       "Escrituração Fiscal",
-      "Declarações",
+      "Declarações (IRPF, IRPJ)",
       "Balanço Patrimonial",
       "DRE",
       "Folha de Pagamento",
-      "Compliance",
-      "Auditoria",
+      "eSocial",
+      "SPED",
+      "Simples Nacional",
+      "Lucro Presumido",
+      "Lucro Real",
       "Planejamento Tributário",
+      "Auditoria",
+      "Compliance Fiscal",
+      "Recuperação de Créditos",
       "Investimentos",
       "Mercado Financeiro",
       "Análise de Investimentos",
-      "Planejamento Financeiro"
+      "Planejamento Financeiro",
+      "Gestão Financeira",
+      "Fluxo de Caixa",
+      "Orçamento Empresarial"
     ]
   },
   "Música e Arte": {

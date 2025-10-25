@@ -5,7 +5,7 @@ export interface Notification {
   user_id: string;
   title: string;
   message: string;
-  type: 'proposal_received' | 'proposal_accepted' | 'proposal_rejected' | 'message' | 'system';
+  type: 'proposal_received' | 'proposal_accepted' | 'proposal_rejected' | 'new_message' | 'new_project' | 'message' | 'system';
   data?: any;
   is_read: boolean;
   read_at?: string;
@@ -214,6 +214,58 @@ class NotificationService {
         proposal_id: proposalId,
         project_title: projectTitle,
         reason,
+      },
+    });
+  }
+
+  /**
+   * Notificar sobre nova mensagem
+   * Nota: Esta função é chamada automaticamente pelo trigger do banco de dados
+   * Mas pode ser usada manualmente se necessário
+   */
+  async notifyNewMessage(
+    recipientId: string,
+    senderName: string,
+    messagePreview: string,
+    conversationId: string,
+    messageId: string,
+    senderId: string
+  ) {
+    return this.createNotification({
+      user_id: recipientId,
+      title: `Nova mensagem de ${senderName}`,
+      message: messagePreview,
+      type: 'new_message',
+      data: {
+        conversation_id: conversationId,
+        message_id: messageId,
+        sender_id: senderId,
+        sender_name: senderName,
+      },
+    });
+  }
+
+  /**
+   * Notificar sobre novo projeto relevante
+   * Nota: Esta função é chamada automaticamente pelo trigger do banco de dados
+   * quando um novo projeto é criado e tem match com as skills do profissional
+   */
+  async notifyNewProject(
+    professionalId: string,
+    projectTitle: string,
+    projectId: string,
+    matchingSkills: number
+  ) {
+    return this.createNotification({
+      user_id: professionalId,
+      title: 'Novo projeto disponível! 💼',
+      message: `Um novo projeto que combina com suas habilidades: "${projectTitle}"`,
+      type: 'new_project',
+      data: {
+        project_id: projectId,
+        project_title: projectTitle,
+        matching_skills: matchingSkills,
+        action: 'view_project',
       },
     });
   }

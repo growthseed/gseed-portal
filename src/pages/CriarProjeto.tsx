@@ -5,10 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { 
   ChevronLeft, 
   ChevronRight, 
-  Upload, 
   X, 
-  FileText,
-  Image as ImageIcon,
   AlertCircle,
   Calendar,
   Loader2
@@ -16,11 +13,13 @@ import {
 import { MultipleImageUpload } from '@/components/upload';
 import { validateField, ValidationErrors } from '@/lib/validation';
 import { toast } from 'sonner';
+import { professionCategories } from '@/data/professions';
 
 interface ProjetoData {
   titulo: string;
   descricao: string;
   anexos: string[]; // URLs das imagens
+  categoria: string; // Nova: categoria selecionada
   profissao: string;
   habilidades: string[];
   orcamento: string;
@@ -28,27 +27,7 @@ interface ProjetoData {
   dataPrazo?: string;
 }
 
-const profissoes = [
-  'Designer',
-  'Gestor de Tráfego',
-  'Programador(a)',
-  'Redator(a)',
-  'Social Media',
-  'Videomaker',
-  'Fotógrafo(a)',
-  'Dados & Analytics',
-];
 
-const habilidadesPorProfissao: Record<string, string[]> = {
-  'Designer': ['UI Design', 'UX Design', 'Design Gráfico', 'Figma', 'Adobe XD', 'Photoshop', 'Illustrator', 'Branding', 'Design de Interface', 'Prototipagem'],
-  'Programador(a)': ['React', 'Node.js', 'JavaScript', 'TypeScript', 'Python', 'Java', 'PHP', 'Vue.js', 'Angular', 'HTML/CSS', 'SQL', 'MongoDB', 'Git'],
-  'Gestor de Tráfego': ['Google Ads', 'Facebook Ads', 'Instagram Ads', 'TikTok Ads', 'LinkedIn Ads', 'Google Analytics', 'SEO', 'Copywriting', 'Funis de Venda'],
-  'Redator(a)': ['Copywriting', 'SEO', 'Criação de Conteúdo', 'Storytelling', 'Revisão de Textos', 'Roteiros', 'E-mail Marketing'],
-  'Social Media': ['Instagram', 'Facebook', 'TikTok', 'LinkedIn', 'Twitter', 'YouTube', 'Planejamento de Conteúdo', 'Canva'],
-  'Videomaker': ['Edição de Vídeo', 'After Effects', 'Premiere Pro', 'Final Cut', 'Motion Graphics', 'Roteiro', 'Filmagem'],
-  'Fotógrafo(a)': ['Fotografia', 'Lightroom', 'Photoshop', 'Edição', 'Direção de Arte', 'Iluminação'],
-  'Dados & Analytics': ['Power BI', 'Tableau', 'Excel', 'SQL', 'Python', 'Machine Learning', 'Análise de Dados'],
-};
 
 const orcamentoOpcoes = [
   { value: '0-1k', label: 'R$ 0 - R$ 1.000', min: 0, max: 1000 },
@@ -66,11 +45,25 @@ export default function CriarProjeto() {
     titulo: '',
     descricao: '',
     anexos: [],
+    categoria: '',
     profissao: '',
     habilidades: [],
     orcamento: '',
     prazo: 'sem_prazo',
   });
+
+  // Profissões disponíveis baseadas na categoria selecionada
+  const [profissoesDisponiveis, setProfissoesDisponiveis] = useState<string[]>([]);
+  
+  // Atualizar profissões quando categoria mudar
+  useEffect(() => {
+    if (formData.categoria && professionCategories[formData.categoria as keyof typeof professionCategories]) {
+      const categoria = professionCategories[formData.categoria as keyof typeof professionCategories];
+      setProfissoesDisponiveis(categoria.specialties);
+    } else {
+      setProfissoesDisponiveis([]);
+    }
+  }, [formData.categoria]);
 
   const MIN_TITULO = 20;
   const MIN_DESCRICAO = 100;
@@ -98,6 +91,10 @@ export default function CriarProjeto() {
 
   const validateStep2 = () => {
     const newErrors: ValidationErrors = {};
+    
+    if (!formData.categoria) {
+      newErrors.categoria = 'Selecione uma categoria';
+    }
     
     if (!formData.profissao) {
       newErrors.profissao = 'Selecione uma profissão';
@@ -239,6 +236,7 @@ export default function CriarProjeto() {
       const result = await projectService.createProject(projectData);
       
       if (result.success && result.data) {
+        toast.success('Projeto criado com sucesso!');
         // Redirecionar para a página do projeto criado
         navigate(`/projetos/${result.data.id}`);
       } else {
@@ -246,15 +244,49 @@ export default function CriarProjeto() {
       }
     } catch (error: any) {
       console.error('Erro ao criar projeto:', error);
-      alert(error.message || 'Erro ao publicar projeto. Tente novamente.');
+      toast.error(error.message || 'Erro ao publicar projeto. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getHabilidadesDisponiveis = () => {
-    if (!formData.profissao) return [];
-    return habilidadesPorProfissao[formData.profissao] || [];
+  // Habilidades disponíveis baseadas na profissão selecionada
+  const getHabilidadesDisponiveis = (): string[] => {
+    if (!formData.categoria || !formData.profissao) return [];
+    
+    const categoria = professionCategories[formData.categoria as keyof typeof professionCategories];
+    return categoria?.skills || [];
+  };
+
+  const handleCategoriaChange = (categoria: string) => {
+    setFormData(prev => ({
+      ...prev,
+      categoria,
+      profissao: '', // Limpar profissão ao mudar categoria
+      habilidades: [], // Limpar habilidades ao mudar categoria
+    }));
+    if (errors.categoria) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.categoria;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleProfissaoChange = (profissao: string) => {
+    setFormData(prev => ({
+      ...prev,
+      profissao,
+      habilidades: [], // Limpar habilidades ao mudar profissão
+    }));
+    if (errors.profissao) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.profissao;
+        return newErrors;
+      });
+    }
   };
 
   const isTituloInvalid = formData.titulo.length > 0 && formData.titulo.length < MIN_TITULO;
@@ -374,25 +406,66 @@ export default function CriarProjeto() {
           {currentStep === 2 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Qual profissional você está procurando?</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">Selecione a profissão mais adequada para executar este projeto.</p>
-              {errors.profissao && (
-                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <p className="text-sm text-red-600 dark:text-red-400">{errors.profissao}</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-8">Selecione a categoria e a profissão mais adequada para executar este projeto.</p>
+              
+              {/* Seleção de Categoria */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-900 dark:text-white mb-3">
+                  Categoria *
+                </label>
+                {errors.categoria && (
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p className="text-sm text-red-600 dark:text-red-400">{errors.categoria}</p>
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {Object.entries(professionCategories).map(([categoria, dados]) => (
+                    <button
+                      key={categoria}
+                      onClick={() => handleCategoriaChange(categoria)}
+                      className={`p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.categoria === categoria 
+                          ? 'border-gseed-500 bg-gseed-50 dark:bg-gseed-900/20 text-gseed-900 dark:text-gseed-400 shadow-sm' 
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-900 dark:text-white hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{dados.icon}</span>
+                        <p className="font-medium">{categoria}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Seleção de Profissão - Aparece apenas após selecionar categoria */}
+              {formData.categoria && profissoesDisponiveis.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-3">
+                    Profissão/Especialidade *
+                  </label>
+                  {errors.profissao && (
+                    <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <p className="text-sm text-red-600 dark:text-red-400">{errors.profissao}</p>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {profissoesDisponiveis.map((prof) => (
+                      <button
+                        key={prof}
+                        onClick={() => handleProfissaoChange(prof)}
+                        className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          formData.profissao === prof 
+                            ? 'border-gseed-500 bg-gseed-50 dark:bg-gseed-900/20 text-gseed-900 dark:text-gseed-400 shadow-sm' 
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-900 dark:text-white hover:shadow-sm'
+                        }`}
+                      >
+                        <p className="font-medium">{prof}</p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-3">
-                {profissoes.map((prof) => (
-                  <button
-                    key={prof}
-                    onClick={() => setFormData({ ...formData, profissao: prof })}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      formData.profissao === prof ? 'border-gseed-500 bg-gseed-50 dark:bg-gseed-900/20 text-gseed-900 dark:text-gseed-400 shadow-sm' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-900 dark:text-white hover:shadow-sm'
-                    }`}
-                  >
-                    <p className="font-medium">{prof}</p>
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 

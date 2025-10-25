@@ -66,23 +66,27 @@ const estados = [
   'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
 ]
 
-// Faixas de orçamento para PROJETOS
+// Faixas de orçamento para PROJETOS (Segmentadas)
 const projectBudgetRanges = [
-  { id: '0-1000', label: 'R$ 0 - R$ 1.000', min: 0, max: 1000 },
-  { id: '1000-3000', label: 'R$ 1.000 - R$ 3.000', min: 1000, max: 3000 },
-  { id: '3000-5000', label: 'R$ 3.000 - R$ 5.000', min: 3000, max: 5000 },
+  { id: '50-200', label: 'R$ 50 - R$ 200', min: 50, max: 200 },
+  { id: '200-500', label: 'R$ 200 - R$ 500', min: 200, max: 500 },
+  { id: '500-1000', label: 'R$ 500 - R$ 1.000', min: 500, max: 1000 },
+  { id: '1000-2500', label: 'R$ 1.000 - R$ 2.500', min: 1000, max: 2500 },
+  { id: '2500-5000', label: 'R$ 2.500 - R$ 5.000', min: 2500, max: 5000 },
   { id: '5000-10000', label: 'R$ 5.000 - R$ 10.000', min: 5000, max: 10000 },
-  { id: '10000+', label: 'Acima de R$ 10.000', min: 10000, max: null },
+  { id: '10000-25000', label: 'R$ 10.000 - R$ 25.000', min: 10000, max: 25000 },
+  { id: '25000+', label: 'Acima de R$ 25.000', min: 25000, max: null },
   { id: 'open', label: 'Aberto a propostas', min: null, max: null },
 ]
 
-// Faixas de salário para VAGAS
+// Faixas de salário para VAGAS (Segmentadas por senioridade)
 const jobSalaryRanges = [
-  { id: '1000-2000', label: 'R$ 1.000 - R$ 2.000', min: 1000, max: 2000 },
-  { id: '2000-4000', label: 'R$ 2.000 - R$ 4.000', min: 2000, max: 4000 },
+  { id: '1500-2500', label: 'R$ 1.500 - R$ 2.500', min: 1500, max: 2500 },
+  { id: '2500-4000', label: 'R$ 2.500 - R$ 4.000', min: 2500, max: 4000 },
   { id: '4000-6000', label: 'R$ 4.000 - R$ 6.000', min: 4000, max: 6000 },
-  { id: '6000-10000', label: 'R$ 6.000 - R$ 10.000', min: 6000, max: 10000 },
-  { id: '10000+', label: 'Acima de R$ 10.000', min: 10000, max: null },
+  { id: '6000-9000', label: 'R$ 6.000 - R$ 9.000', min: 6000, max: 9000 },
+  { id: '9000-15000', label: 'R$ 9.000 - R$ 15.000', min: 9000, max: 15000 },
+  { id: '15000+', label: 'Acima de R$ 15.000', min: 15000, max: null },
   { id: 'open', label: 'A combinar', min: null, max: null },
 ]
 

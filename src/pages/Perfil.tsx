@@ -885,8 +885,8 @@ export default function Perfil() {
                   } dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50`}
                 >
                   <option value="">Selecione</option>
-                  {professionCategories.map(cat => (
-                    <option key={cat.name} value={cat.name}>{cat.name}</option>
+                  {Object.keys(professionCategories).map(catName => (
+                    <option key={catName} value={catName}>{catName}</option>
                   ))}
                 </select>
                 {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
@@ -907,11 +907,9 @@ export default function Perfil() {
                     } dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50`}
                   >
                     <option value="">Selecione</option>
-                    {professionCategories
-                      .find(c => c.name === profile.category)
-                      ?.professions.map(prof => (
-                        <option key={prof} value={prof}>{prof}</option>
-                      ))}
+                    {profile.category && professionCategories[profile.category as keyof typeof professionCategories]?.specialties.map(prof => (
+                      <option key={prof} value={prof}>{prof}</option>
+                    ))}
                   </select>
                   {errors.profession && <p className="text-red-500 text-sm mt-1">{errors.profession}</p>}
                 </div>
@@ -1020,7 +1018,7 @@ export default function Perfil() {
             
             {editing ? (
               <MultipleImageUpload
-                currentImages={profile.portfolio_images || []}
+                currentImageUrls={profile.portfolio_images || []}
                 onUploadComplete={(urls) => setProfile({ ...profile, portfolio_images: urls })}
                 maxImages={10}
               />

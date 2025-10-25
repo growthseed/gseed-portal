@@ -7,7 +7,7 @@ import { uploadToCloudinary } from '../services/cloudinaryService';
 import { useEmailConfirmation } from '../hooks/useEmailConfirmation';
 
 interface OnboardingData {
-  tipo: 'profissional' | 'contratante' | null;
+  tipo: 'professional' | 'contractor' | null;
   nome: string;
   email: string;
   categoria: string;
@@ -39,19 +39,30 @@ export default function Onboarding() {
     estado: ''
   });
 
-  // Buscar dados do usuário autenticado
+  // Buscar dados do usuário autenticado e seu tipo
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setFormData(prev => ({ ...prev, email: user.email || '' }));
+        
+        // Buscar o tipo do usuário do banco
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('user_type')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile?.user_type) {
+          setFormData(prev => ({ ...prev, tipo: profile.user_type as 'professional' | 'contractor' }));
+        }
       }
     };
     getUser();
   }, []);
 
   // Escolha do tipo (Contratante ou Profissional)
-  const handleTipoSelection = (tipo: 'profissional' | 'contratante') => {
+  const handleTipoSelection = (tipo: 'professional' | 'contractor') => {
     setFormData(prev => ({ ...prev, tipo }));
     setCurrentStep(1);
   };
@@ -65,7 +76,7 @@ export default function Onboarding() {
   // Seleção de especialidade
   const handleEspecialidadeSelection = (especialidade: string) => {
     setFormData(prev => ({ ...prev, especialidade }));
-    if (formData.tipo === 'profissional') {
+    if (formData.tipo === 'professional') {
       setCurrentStep(3);
     } else {
       setCurrentStep(5); // Pular para perfil se for contratante
@@ -139,13 +150,14 @@ export default function Onboarding() {
           avatar_url: formData.avatarUrl,
           state: formData.estado,
           gender: formData.sexo === 'masculino' ? 'male' : 'female',
-          is_email_verified: emailConfirmed
+          is_email_verified: emailConfirmed,
+          user_type: formData.tipo // Salvar o tipo correto
         })
         .eq('id', user.id);
 
       if (!error) {
         // Criar perfil profissional se for o caso
-        if (formData.tipo === 'profissional') {
+        if (formData.tipo === 'professional') {
           await supabase.from('professional_profiles').upsert({
             user_id: user.id,
             title: formData.especialidade,
@@ -182,7 +194,7 @@ export default function Onboarding() {
             
             <div className="grid md:grid-cols-2 gap-6 mt-8">
               <button
-                onClick={() => handleTipoSelection('contratante')}
+                onClick={() => handleTipoSelection('contractor')}
                 className="p-8 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-lg transition-all group"
               >
                 <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-blue-500" />
@@ -190,7 +202,7 @@ export default function Onboarding() {
               </button>
 
               <button
-                onClick={() => handleTipoSelection('profissional')}
+                onClick={() => handleTipoSelection('professional')}
                 className="p-8 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-lg transition-all group relative"
               >
                 <span className="absolute top-4 right-4 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
@@ -282,7 +294,7 @@ export default function Onboarding() {
                 ← Voltar
               </button>
               <button
-                onClick={() => setCurrentStep(formData.tipo === 'profissional' ? 3 : 5)}
+                onClick={() => setCurrentStep(formData.tipo === 'professional' ? 3 : 5)}
                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
               >
                 Continuar
@@ -292,7 +304,7 @@ export default function Onboarding() {
         )}
 
         {/* Step 3: Seleção de habilidades (apenas para profissional) */}
-        {currentStep === 3 && formData.tipo === 'profissional' && (
+        {currentStep === 3 && formData.tipo === 'professional' && (
           <div className="bg-white rounded-lg shadow-lg p-8">
             <p className="text-sm text-gray-500 mb-2">PASSO 2 DE 3</p>
             <h2 className="text-2xl font-bold mb-2">Quais são suas principais habilidades?</h2>
@@ -354,21 +366,21 @@ export default function Onboarding() {
           </div>
         )}
 
-        {/* Step 4/5: Completar perfil */}
-        {(currentStep === 4 || currentStep === 5) && (
+        {/* Step 4: Completar perfil (PROFISSIONAL) */}
+        {currentStep === 4 && formData.tipo === 'professional' && (
           <div className="bg-white rounded-lg shadow-lg p-8">
             <p className="text-sm text-gray-500 mb-2">PASSO 3 DE 3</p>
             <h2 className="text-2xl font-bold mb-2">Deixe seu perfil ainda mais completo!</h2>
             <p className="text-gray-600 mb-6">
               Fale um pouco sobre você e adicione uma foto ao seu perfil. 
-              Isso ajuda os {formData.tipo === 'profissional' ? 'contratantes' : 'profissionais'} a conhecerem melhor quem é você. 
+              Isso ajuda os contratantes a conhecerem melhor quem é você. 
               Mas sem pressa — você pode preencher depois. 😊
             </p>
 
             {/* Upload de foto */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
-                Inclua uma foto para fortalecer sua conexão com os {formData.tipo === 'profissional' ? 'profissionais' : 'contratantes'}
+                Inclua uma foto para fortalecer sua conexão com os contratantes
               </label>
               <div className="flex items-center gap-4">
                 <div className="relative">
@@ -489,7 +501,162 @@ export default function Onboarding() {
 
             <div className="flex justify-between mt-8">
               <button
-                onClick={() => setCurrentStep(formData.tipo === 'profissional' ? 3 : 2)}
+                onClick={() => setCurrentStep(3)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                ← Voltar
+              </button>
+              <button
+                onClick={handleFinish}
+                disabled={isLoading || !formData.nome || !emailConfirmed}
+                className={`px-6 py-3 rounded-lg font-medium ${
+                  isLoading || !formData.nome || !emailConfirmed
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                }`}
+              >
+                {isLoading ? 'Salvando...' : 'Continuar'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Completar perfil (CONTRATANTE) */}
+        {currentStep === 5 && formData.tipo === 'contractor' && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <p className="text-sm text-gray-500 mb-2">PASSO 3 DE 3</p>
+            <h2 className="text-2xl font-bold mb-2">Deixe seu perfil ainda mais completo!</h2>
+            <p className="text-gray-600 mb-6">
+              Fale um pouco sobre você e adicione uma foto ao seu perfil. 
+              Isso ajuda os profissionais a conhecerem melhor quem é você. 
+              Mas sem pressa — você pode preencher depois. 😊
+            </p>
+
+            {/* Upload de foto */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">
+                Inclua uma foto para fortalecer sua conexão com os profissionais
+              </label>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                    {formData.avatarUrl ? (
+                      <img src={formData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <Camera className="text-gray-400" size={32} />
+                    )}
+                  </div>
+                  <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600">
+                    <Upload size={16} />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+                <p className="text-sm text-gray-500">Min 400×400px, PNG or JPEG</p>
+              </div>
+            </div>
+
+            {/* Nome */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Nome completo</label>
+              <input
+                type="text"
+                value={formData.nome}
+                onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Seu nome"
+              />
+            </div>
+
+            {/* Sexo */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Sexo</label>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setFormData(prev => ({ ...prev, sexo: 'masculino' }))}
+                  className={`px-4 py-2 rounded-lg border ${
+                    formData.sexo === 'masculino'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-300'
+                  }`}
+                >
+                  Masculino
+                </button>
+                <button
+                  onClick={() => setFormData(prev => ({ ...prev, sexo: 'feminino' }))}
+                  className={`px-4 py-2 rounded-lg border ${
+                    formData.sexo === 'feminino'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-300'
+                  }`}
+                >
+                  Feminino
+                </button>
+              </div>
+            </div>
+
+            {/* Estado */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Estado</label>
+              <select
+                value={formData.estado}
+                onChange={(e) => setFormData(prev => ({ ...prev, estado: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Selecione seu estado</option>
+                {brazilianStates.map(state => (
+                  <option key={state.value} value={state.value}>{state.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sobre você */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">Sobre você (opcional)</label>
+              <textarea
+                value={formData.sobreMim}
+                onChange={(e) => setFormData(prev => ({ ...prev, sobreMim: e.target.value }))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                rows={5}
+                placeholder="Conte um pouco sobre você e a sua história"
+                maxLength={2000}
+              />
+              <div className="flex justify-between text-sm text-gray-500 mt-1">
+                <span>Mínimo de 100 caracteres</span>
+                <span>{formData.sobreMim.length}/2000</span>
+              </div>
+            </div>
+
+            {/* Confirmação de email */}
+            {!emailConfirmed && (
+              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm font-medium mb-2">Confirme seu email para continuar</p>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded"
+                    placeholder="seu@email.com"
+                  />
+                  <button
+                    onClick={handleSendEmailConfirmation}
+                    disabled={isLoading || !formData.email}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                  >
+                    Enviar confirmação
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={() => setCurrentStep(2)}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 ← Voltar

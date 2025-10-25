@@ -53,8 +53,8 @@ export function SignUpForm({ onSuccess, userType, onBack }: SignUpFormProps) {
     setLoading(true);
 
     try {
-      // CORREÇÃO: Usar signUpWithWelcomeEmail para enviar emails via Brevo
-      const result = await authService.signUpWithWelcomeEmail(
+      // Criar conta usando método padrão do authService
+      const result = await authService.signUp(
         formData.email,
         formData.password,
         formData.fullName

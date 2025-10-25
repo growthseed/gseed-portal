@@ -53,10 +53,10 @@ export interface Profile {
   availability_hours?: number;
   website?: string;
   
-  // Campos calculados
-  full_name?: string;
-  location_city?: string;
-  location_state?: string;
+  // Campos calculados/aliases para compatibilidade
+  full_name?: string; // Alias para 'name' (mantido para retrocompatibilidade)
+  location_city?: string; // Alias para 'city' (mantido para retrocompatibilidade)
+  location_state?: string; // Alias para 'state' (mantido para retrocompatibilidade)
   company_segment?: string;
   company_description?: string;
 }

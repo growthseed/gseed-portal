@@ -104,6 +104,11 @@ class ProfessionalService {
 
       if (error) throw error;
 
+      // Verificar se é profissional
+      if (!data.is_professional || !data.professional) {
+        throw new Error('Usuário não é um profissional');
+      }
+
       // Mesclar dados do perfil profissional no perfil principal
       const mergedData = {
         ...data,
@@ -221,21 +226,16 @@ class ProfessionalService {
    */
   async incrementViews(userId: string) {
     try {
-      // Buscar perfil profissional
+      // Buscar perfil profissional - SILENCIOSAMENTE retornar se não existir
       const { data: professional, error: fetchError } = await supabase
         .from('professional_profiles')
         .select('id, views_count')
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (fetchError) {
-        console.error('Erro ao buscar perfil profissional:', fetchError);
-        return { success: false, message: fetchError.message };
-      }
-
-      if (!professional) {
-        console.warn('Perfil profissional não encontrado para incrementar views');
-        return { success: false, message: 'Perfil profissional não encontrado' };
+      // Se não encontrou ou erro, não fazer nada (falha silenciosa)
+      if (fetchError || !professional) {
+        return { success: true }; // Não logar erro, apenas retornar
       }
 
       // Incrementar visualizações

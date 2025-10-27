@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,11 +12,12 @@ import { PasswordStrength } from '@/components/ui/PasswordStrength'
 import { OnboardingChoiceModal } from '@/components/onboarding/OnboardingChoiceModal'
 
 export default function Register() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { signUp } = useAuth()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [showModal, setShowModal] = useState(true) // MODAL APARECE PRIMEIRO
+  const [showModal, setShowModal] = useState(true)
   const [userType, setUserType] = useState<'professional' | 'contractor' | null>(null)
   const [formData, setFormData] = useState({
     name: '',
@@ -34,7 +36,6 @@ export default function Register() {
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
-    // Limpar erro do campo ao digitar
     if (errors[field]) {
       setErrors(prev => {
         const newErrors = { ...prev }
@@ -47,30 +48,25 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Validar tipo de usuário
     if (!userType) {
-      toast.error('Selecione o tipo de conta')
+      toast.error(t('auth.register.selectUserType'))
       setShowModal(true)
       return
     }
 
-    // Validar termos de uso
     if (!acceptTerms) {
-      toast.error('Você precisa aceitar os termos de uso para continuar')
+      toast.error(t('auth.register.acceptTermsRequired'))
       return
     }
 
-    // Validar formulário base
     const validationErrors = validateForm(formData, validationSchemas.register)
     
-    // Validação adicional: confirmar senha
     if (formData.password !== formData.confirmPassword) {
-      validationErrors.confirmPassword = 'As senhas não coincidem'
+      validationErrors.confirmPassword = t('auth.errors.passwordsDontMatch')
     }
     
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
-      // Mostrar primeiro erro
       const firstError = Object.values(validationErrors)[0]
       toast.error(firstError)
       return
@@ -83,7 +79,7 @@ export default function Register() {
         user_type: userType,
         phone: formData.phone || null
       })
-      toast.success('Conta criada com sucesso! Complete seu perfil.')
+      toast.success(t('auth.register.accountCreated'))
       navigate('/onboarding')
     } catch (error) {
       console.error(error)
@@ -92,7 +88,6 @@ export default function Register() {
     }
   }
 
-  // Se o modal estiver aberto, mostrar apenas o modal
   if (showModal) {
     return (
       <OnboardingChoiceModal
@@ -109,17 +104,17 @@ export default function Register() {
       <Card className="w-full max-w-md border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-gray-900 dark:text-white">
-            Criar Conta no GSeed Portal
+            {t('auth.register.title')}
           </CardTitle>
           <CardDescription className="text-center text-gray-600 dark:text-gray-400">
-            Você escolheu: <span className="font-semibold text-gseed-600 dark:text-gseed-400">
-              {userType === 'professional' ? 'Profissional' : 'Contratante'}
+            {t('auth.register.youChose')} <span className="font-semibold text-gseed-600 dark:text-gseed-400">
+              {userType === 'professional' ? t('auth.register.professional') : t('auth.register.contractor')}
             </span>
             <button 
               onClick={() => setShowModal(true)}
               className="ml-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
             >
-              (trocar)
+              {t('auth.register.change')}
             </button>
           </CardDescription>
         </CardHeader>
@@ -127,13 +122,13 @@ export default function Register() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Nome Completo
+                {t('auth.register.fullName')}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
                 <Input
                   type="text"
-                  placeholder="Seu nome"
+                  placeholder={t('auth.register.fullNamePlaceholder')}
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   className={`pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
@@ -152,13 +147,13 @@ export default function Register() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email
+                {t('auth.register.emailLabel')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
                 <Input
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={t('auth.emailPlaceholder')}
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
                   className={`pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
@@ -177,13 +172,13 @@ export default function Register() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Senha
+                {t('auth.register.passwordLabel')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
                 <Input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Crie uma senha forte"
+                  placeholder={t('auth.register.passwordPlaceholder')}
                   value={formData.password}
                   onChange={(e) => handleChange('password', e.target.value)}
                   className={`pl-10 pr-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
@@ -214,13 +209,13 @@ export default function Register() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Confirmar Senha
+                {t('auth.register.confirmPasswordLabel')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
                 <Input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Repita a senha"
+                  placeholder={t('auth.register.confirmPasswordPlaceholder')}
                   value={formData.confirmPassword}
                   onChange={(e) => handleChange('confirmPassword', e.target.value)}
                   className={`pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
@@ -239,12 +234,12 @@ export default function Register() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Telefone <span className="text-gray-400 dark:text-gray-500">(opcional)</span>
+                {t('auth.register.phone')} <span className="text-gray-400 dark:text-gray-500">{t('auth.register.phoneOptional')}</span>
               </label>
               <div className="relative">
                 <Input
                   type="tel"
-                  placeholder="(00) 00000-0000"
+                  placeholder={t('auth.register.phonePlaceholder')}
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   className={`bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
@@ -269,25 +264,25 @@ export default function Register() {
                 onChange={(e) => setAcceptTerms(e.target.checked)}
               />
               <label className="text-sm text-gray-600 dark:text-gray-400">
-                Concordo com os{' '}
+                {t('auth.register.agreeToTerms')}{' '}
                 <Link to="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Termos de Uso
+                  {t('auth.register.termsOfUse')}
                 </Link>{' '}
-                e{' '}
+                {t('auth.register.and')}{' '}
                 <Link to="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Política de Privacidade
+                  {t('auth.register.privacyPolicy')}
                 </Link>
               </label>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading || !acceptTerms}>
-              {loading ? 'Criando conta...' : 'Criar Conta'}
+              {loading ? t('auth.register.creatingAccount') : t('auth.register.createAccountButton')}
             </Button>
             <div className="text-sm text-center text-gray-600 dark:text-gray-400">
-              Já tem uma conta?{' '}
+              {t('auth.register.haveAccount')}{' '}
               <Link to="/login" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                Faça login
+                {t('auth.register.signInLink')}
               </Link>
             </div>
           </CardFooter>

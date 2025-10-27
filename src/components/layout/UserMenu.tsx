@@ -41,28 +41,28 @@ export function UserMenu({ userName, userEmail, userAvatar }: UserMenuProps) {
   const handleLogout = async () => {
     try {
       await signOut();
-      // Redirecionar para login após logout bem-sucedido
+      // Redirect to login after successful logout
       navigate('/login', { replace: true });
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
+      console.error('Error logging out:', error);
     }
   };
 
   const menuItems = [
     {
       icon: FileText,
-      label: 'Minhas Propostas',
-      onClick: () => navigate('/propostas'),
+      label: 'My Proposals',
+      onClick: () => navigate('/proposals'),
     },
     {
       icon: Briefcase,
-      label: 'Meus Projetos',
-      onClick: () => navigate('/meus-projetos'),
+      label: 'My Projects',
+      onClick: () => navigate('/my-projects'),
     },
     {
       icon: Settings,
-      label: 'Configurações',
-      onClick: () => navigate('/configuracoes'),
+      label: 'Settings',
+      onClick: () => navigate('/settings'),
     },
   ];
 
@@ -80,7 +80,7 @@ export function UserMenu({ userName, userEmail, userAvatar }: UserMenuProps) {
           )}
         </div>
         <div className="text-left hidden md:block">
-          <p className="text-sm font-medium text-gray-900 dark:text-white">{userName || 'Usuário'}</p>
+          <p className="text-sm font-medium text-gray-900 dark:text-white">{userName || 'User'}</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail || ''}</p>
         </div>
         <ChevronDown 
@@ -102,7 +102,7 @@ export function UserMenu({ userName, userEmail, userAvatar }: UserMenuProps) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                  {userName || 'Usuário'}
+                  {userName || 'User'}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {userEmail || ''}
@@ -111,21 +111,21 @@ export function UserMenu({ userName, userEmail, userAvatar }: UserMenuProps) {
             </div>
           </div>
 
-          {/* Perfil - Primeiro item */}
+          {/* Profile - First item */}
           <div className="py-2 border-b border-gray-200 dark:border-gray-700">
             <button
               onClick={() => {
-                navigate('/perfil');
+                navigate('/profile');
                 setIsOpen(false);
               }}
               className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left"
             >
               <User size={18} className="text-gray-600 dark:text-gray-400" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">Meu Perfil</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">My Profile</span>
             </button>
           </div>
 
-          {/* Outros itens */}
+          {/* Other items */}
           <div className="py-2">
             {menuItems.map((item, index) => {
               const Icon = item.icon;
@@ -154,7 +154,7 @@ export function UserMenu({ userName, userEmail, userAvatar }: UserMenuProps) {
               className="w-full px-4 py-3 flex items-center gap-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left text-red-600 dark:text-red-400"
             >
               <LogOut size={18} />
-              <span className="text-sm font-medium">Sair</span>
+              <span className="text-sm font-medium">Sign Out</span>
             </button>
           </div>
         </div>

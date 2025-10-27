@@ -1,0 +1,62 @@
+// ===== CORREÇÃO 1: Substituir a função addService (linha ~507) =====
+// Procure por: const addService = async () => {
+// E substitua toda a função até o fechamento };
+
+const addService = async () => {
+  if (!newService.title || !newService.description || !newService.price) {
+    toast.error('Preencha todos os campos do serviço');
+    return;
+  }
+
+  try {
+    // ✅ CORREÇÃO: Buscar o ID do perfil profissional primeiro
+    const { data: profProfile, error: profError } = await supabase
+      .from('professional_profiles')
+      .select('id')
+      .eq('user_id', profile?.id)
+      .single();
+
+    if (profError || !profProfile) {
+      toast.error('Perfil profissional não encontrado. Salve seu perfil profissional primeiro.');
+      return;
+    }
+
+    // ✅ AGORA sim, usar professional_profiles.id
+    const { data, error } = await supabase
+      .from('professional_services')
+      .insert({
+        professional_id: profProfile.id,  // ✅ professional_profiles.id
+        title: newService.title,
+        description: newService.description,
+        price: newService.price
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    setServices([...services, data]);
+    setNewService({ title: '', description: '', price: '' });
+    toast.success('Serviço adicionado!');
+  } catch (error) {
+    console.error('Erro ao adicionar serviço:', error);
+    toast.error('Erro ao adicionar serviço');
+  }
+};
+
+
+// ===== CORREÇÃO 2: Substituir o bloco de carregar serviços (linha ~241) =====
+// Procure por: // Carregar serviços se for profissional
+// E substitua o bloco até o }
+
+// Carregar serviços se for profissional
+if (hasProfessionalProfile && professionalData) {  // ✅ Adicionar && professionalData
+  const { data: servicesData } = await supabase
+    .from('professional_services')
+    .select('*')
+    .eq('professional_id', professionalData.id);  // ✅ Usar professionalData.id
+  
+  if (servicesData) {
+    setServices(servicesData);
+  }
+}

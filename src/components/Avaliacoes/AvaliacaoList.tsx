@@ -106,12 +106,12 @@ export function AvaliacaoList({ avaliacoes, averageRating, totalAvaliacoes }: Av
                 {avaliacao.client?.avatar_url ? (
                   <img
                     src={avaliacao.client.avatar_url}
-                    alt={avaliacao.client.full_name || 'Cliente'}
+                    alt={avaliacao.client.name || 'Cliente'}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gseed-500 to-gseed-600 flex items-center justify-center text-white font-semibold">
-                    {avaliacao.client?.full_name?.charAt(0) || <User size={24} />}
+                    {avaliacao.client?.name?.charAt(0) || <User size={24} />}
                   </div>
                 )}
               </div>
@@ -121,7 +121,7 @@ export function AvaliacaoList({ avaliacoes, averageRating, totalAvaliacoes }: Av
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white">
-                      {avaliacao.client?.full_name || 'Cliente Anônimo'}
+                      {avaliacao.client?.name || 'Cliente Anônimo'}
                     </h4>
                     <div className="flex items-center gap-2 mt-1">
                       {renderStars(avaliacao.rating)}
@@ -145,9 +145,9 @@ export function AvaliacaoList({ avaliacoes, averageRating, totalAvaliacoes }: Av
                     <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                       {avaliacao.response}
                     </p>
-                    {avaliacao.response_date && (
+                    {avaliacao.responded_at && (
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {formatDate(avaliacao.response_date)}
+                        {formatDate(avaliacao.responded_at)}
                       </p>
                     )}
                   </div>

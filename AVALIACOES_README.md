@@ -470,10 +470,24 @@ Problemas? Consulte:
 
 ---
 
-**Versão**: 1.0.0  
+**Versão**: 1.0.1  
 **Data de Criação**: 06/10/2025  
-**Última Atualização**: 06/10/2025  
+**Última Atualização**: 25/10/2025  
 **Status**: ✅ Produção
+
+---
+
+## 📝 Changelog
+
+### v1.0.1 (25/10/2025)
+- ✅ Corrigido erro TypeScript em AvaliacaoList.tsx
+- ✅ Corrigido referências de `client.full_name` para `client.name`
+- ✅ Corrigido campo `response_date` para `responded_at`
+- ✅ Removido uso explícito de tipo `any` em avaliacaoService.ts
+- 📚 Documentação completa em CORRECOES-AVALIACOES-25-OUT-2025.md
+
+### v1.0.0 (06/10/2025)
+- 🎉 Versão inicial do sistema de avaliações
 
 ---
 

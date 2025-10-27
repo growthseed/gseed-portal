@@ -1,0 +1,56 @@
+========================================
+  DEPLOY SEGURO - GSEED PORTAL
+========================================
+
+[!] USUARIOS PROTEGIDOS
+[!] APENAS CODIGO FRONTEND
+[!] SEM ALTERACOES NO BANCO
+
+========================================
+  PASSO A PASSO
+========================================
+
+1. EXECUTE:
+   DEPLOY-CHAT-E-FIXES.bat
+
+2. AGUARDE:
+   - Commit criado
+   - Push para GitHub
+   - Deploy automatico Vercel (2-3 min)
+
+3. TESTE:
+   - Abra: https://portal.gseed.com.br
+   - Console (F12): Apenas 1 log
+   - Login: Funciona
+   - Chat: Envia mensagem
+
+4. VERIFICAR:
+   - Usuario adicional OK
+   - Dados mantidos
+   - Sem erros
+
+========================================
+  SE ALGO DER ERRADO
+========================================
+
+git revert HEAD
+git push origin main
+
+(Volta tudo ao normal em 2 min)
+
+========================================
+  DOCUMENTACAO COMPLETA
+========================================
+
+Leia antes:
+- DEPLOY-AGORA.md
+- CHECKLIST-SEGURANCA-DEPLOY.md
+- GUIA-DEPLOY-COMPLETO.md
+
+========================================
+  PRONTO PARA EXECUTAR?
+========================================
+
+Execute: DEPLOY-CHAT-E-FIXES.bat
+
+========================================

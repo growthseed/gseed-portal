@@ -21,10 +21,10 @@ export function AppHeader({ userName, userEmail, userAvatar }: AppHeaderProps) {
   const [chatUnreadCount, setChatUnreadCount] = useState(0);
   const { theme } = useTheme();
   
-  // Determina qual logo usar baseado no tema
+  // Determine which logo to use based on theme
   const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  // Carregar contador de mensagens não lidas
+  // Load unread messages counter
   useEffect(() => {
     const loadChatUnreadCount = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -36,8 +36,8 @@ export function AppHeader({ userName, userEmail, userAvatar }: AppHeaderProps) {
     
     loadChatUnreadCount();
     
-    // Atualizar contador periodicamente
-    const interval = setInterval(loadChatUnreadCount, 30000); // A cada 30s
+    // Update counter periodically
+    const interval = setInterval(loadChatUnreadCount, 30000); // Every 30s
     
     return () => clearInterval(interval);
   }, []);
@@ -49,14 +49,14 @@ export function AppHeader({ userName, userEmail, userAvatar }: AppHeaderProps) {
           <div className="flex items-center justify-between">
             {/* Left Side - Logo */}
             <div className="flex items-center">
-              {/* Logo - Clique para voltar à Home */}
+              {/* Logo - Click to return to Home */}
               <button 
                 onClick={() => navigate('/')}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
                 type="button"
-                aria-label="Voltar para home"
+                aria-label="Back to home"
               >
-                {/* Logo Original Gseed em PNG */}
+                {/* Original Gseed Logo in PNG */}
                 <img 
                   src={isDark ? '/logo-dark.png' : '/logo-light.png'}
                   alt="Gseed Logo"
@@ -64,30 +64,31 @@ export function AppHeader({ userName, userEmail, userAvatar }: AppHeaderProps) {
                   style={{ maxHeight: '32px' }}
                 />
                 
-                {/* Texto Works */}
+                {/* Works Text */}
                 <span className="text-2xl font-bold text-gseed-600 dark:text-gseed-400">
                   Works
                 </span>
               </button>
             </div>
 
-            {/* Right Side - Botão Criar Projetos + Notificações + Chat + Menu Usuário */}
+            {/* Right Side - Create Project Button + Notifications + Chat + User Menu */}
             <div className="flex items-center gap-3">
-              {/* Botão Criar Projetos */}
+              {/* Create Project Button */}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2.5 bg-gseed-500 hover:bg-gseed-600 text-white rounded-lg font-medium transition-all hover:shadow-lg hover:scale-105 active:scale-95"
               >
                 <Plus size={20} />
-                <span className="hidden sm:inline">Criar Projeto</span>
+                <span className="hidden sm:inline">Create Project</span>
               </button>
-              {/* Notificações */}
+              
+              {/* Notifications */}
               <NotificationsMenu />
               
               {/* Chat */}
               <ChatPanel unreadCount={chatUnreadCount} />
               
-              {/* Menu do Usuário */}
+              {/* User Menu */}
               <UserMenu 
                 userName={userName}
                 userEmail={userEmail}
@@ -98,17 +99,17 @@ export function AppHeader({ userName, userEmail, userAvatar }: AppHeaderProps) {
         </div>
       </header>
 
-      {/* Modal de Escolha */}
+      {/* Choice Modal */}
       <EscolhaTipoModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         onSelectVaga={() => {
           setIsModalOpen(false);
-          navigate('/criar-vaga');
+          navigate('/create-job');
         }}
         onSelectProjeto={() => {
           setIsModalOpen(false);
-          navigate('/criar-projeto');
+          navigate('/create-project');
         }}
       />
     </>

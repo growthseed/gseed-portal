@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste Chat - Buscar Mensagens</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Teste de Busca de Mensagens</h1>
+  
+  <div id="status">Carregando...</div>
+  
+  <div id="results"></div>
+
+  <script>
+    // IMPORTANTE: Substitua com as suas credenciais
+    const SUPABASE_URL = 'https://bchnlhzcmhaxegafctgv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjaG5saHpjbWhheGVnYWZjdGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU4Mzg4NjUsImV4cCI6MjA0MTQxNDg2NX0.kjVEEfMqsb6A3fF17sT8VE55hAQxnLK-Y1WQyYZEFTk';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function testChatMessages() {
+      const statusDiv = document.getElementById('status');
+      const resultsDiv = document.getElementById('results');
+
+      try {
+        statusDiv.innerHTML = '<p style="color: blue;">🔍 Verificando autenticação...</p>';
+        
+        // 1. Verificar usuário autenticado
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+          statusDiv.innerHTML = '<p style="color: red;">❌ Usuário não autenticado! Faça login primeiro no portal.</p>';
+          return;
+        }
+
+        statusDiv.innerHTML = `<p style="color: green;">✅ Usuário autenticado: ${user.id}</p>`;
+        resultsDiv.innerHTML += `<p><strong>Email:</strong> ${user.email}</p>`;
+
+        // 2. Buscar mensagens da conversa
+        statusDiv.innerHTML += '<p style="color: blue;">🔍 Buscando mensagens...</p>';
+        
+        const conversationId = '1e1748f0-2ad0-4cf2-8ee9-974e52046bb3';
+        
+        const { data: messages, error: messagesError } = await supabase
+          .from('chat_messages')
+          .select(`
+            *,
+            sender:profiles!sender_id (
+              id,
+              name,
+              avatar_url
+            )
+          `)
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true });
+
+        if (messagesError) {
+          statusDiv.innerHTML += `<p style="color: red;">❌ Erro ao buscar mensagens: ${messagesError.message}</p>`;
+          resultsDiv.innerHTML += `<pre>${JSON.stringify(messagesError, null, 2)}</pre>`;
+          return;
+        }
+
+        if (!messages || messages.length === 0) {
+          statusDiv.innerHTML += '<p style="color: orange;">⚠️ Nenhuma mensagem encontrada!</p>';
+          
+          // Verificar se a conversa existe
+          const { data: conv } = await supabase
+            .from('conversations')
+            .select('*')
+            .eq('id', conversationId)
+            .single();
+          
+          resultsDiv.innerHTML += `<h3>Conversa:</h3><pre>${JSON.stringify(conv, null, 2)}</pre>`;
+          return;
+        }
+
+        statusDiv.innerHTML += `<p style="color: green;">✅ ${messages.length} mensagens encontradas!</p>`;
+        resultsDiv.innerHTML += `<h3>Mensagens:</h3>`;
+        
+        messages.forEach((msg, index) => {
+          resultsDiv.innerHTML += `
+            <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px;">
+              <p><strong>Mensagem ${index + 1}:</strong></p>
+              <p><strong>ID:</strong> ${msg.id}</p>
+              <p><strong>Sender:</strong> ${msg.sender?.name || 'Desconhecido'}</p>
+              <p><strong>Conteúdo:</strong> ${msg.content}</p>
+              <p><strong>Data:</strong> ${new Date(msg.created_at).toLocaleString()}</p>
+              <p><strong>Lida:</strong> ${msg.read ? 'Sim' : 'Não'}</p>
+            </div>
+          `;
+        });
+
+      } catch (error) {
+        statusDiv.innerHTML += `<p style="color: red;">❌ Erro fatal: ${error.message}</p>`;
+        resultsDiv.innerHTML += `<pre>${JSON.stringify(error, null, 2)}</pre>`;
+      }
+    }
+
+    // Executar quando a página carregar
+    window.addEventListener('DOMContentLoaded', testChatMessages);
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+    }
+    #status {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #results {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</body>
+</html>

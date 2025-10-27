@@ -9,8 +9,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import AuthCallback from './pages/AuthCallback';
-import ProfissionaisPage from './pages/ProfissionaisPage';
-import ProjetosPage from './pages/ProjetosPage';
+import ProfessionalsPage from './pages/ProfessionalsPage';
+import ProjectsPage from './pages/ProjectsPage';
 import Perfil from './pages/Perfil';
 import Configuracoes from './pages/Configuracoes';
 import ProjetoDetalhes from './pages/ProjetoDetalhes';
@@ -50,7 +50,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-gseed-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Carregando...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -61,41 +61,46 @@ function App() {
       <ThemeProvider>
         <Router>
           <Routes>
-            {/* Rotas PÚBLICAS - Apenas listagens */}
+            {/* PUBLIC Routes - Listings only */}
             <Route 
               path="/" 
               element={
                 <PublicLayout>
-                  <ProjetosPage />
+                  <ProjectsPage />
                 </PublicLayout>
               } 
             />
             <Route 
-              path="/profissionais" 
+              path="/professionals" 
               element={
                 <PublicLayout>
-                  <ProfissionaisPage />
+                  <ProfessionalsPage />
                 </PublicLayout>
               } 
             />
             <Route 
-              path="/projetos" 
+              path="/projects" 
               element={
                 <PublicLayout>
-                  <ProjetosPage />
+                  <ProjectsPage />
                 </PublicLayout>
               } 
             />
 
-            {/* Rotas de Autenticação */}
-            <Route path="/login" element={user ? <Navigate to="/perfil" /> : <Login />} />
-            <Route path="/cadastro" element={user ? <Navigate to="/perfil" /> : <Register />} />
-            <Route path="/register" element={user ? <Navigate to="/perfil" /> : <Register />} />
+            {/* Portuguese aliases for backward compatibility */}
+            <Route path="/profissionais" element={<Navigate to="/professionals" replace />} />
+            <Route path="/projetos" element={<Navigate to="/projects" replace />} />
+
+            {/* Authentication Routes */}
+            <Route path="/login" element={user ? <Navigate to="/profile" /> : <Login />} />
+            <Route path="/cadastro" element={user ? <Navigate to="/profile" /> : <Register />} />
+            <Route path="/register" element={user ? <Navigate to="/profile" /> : <Register />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/dashboard" element={<Navigate to="/perfil" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/profile" replace />} />
+            <Route path="/perfil" element={<Navigate to="/profile" replace />} />
 
-            {/* Rota de Onboarding - NOVA */}
+            {/* Onboarding Route - NEW */}
             <Route 
               path="/onboarding" 
               element={
@@ -107,9 +112,9 @@ function App() {
               } 
             />
 
-            {/* Rotas PROTEGIDAS - Detalhes e Interações */}
+            {/* PROTECTED Routes - Details and Interactions */}
             <Route
-              path="/projetos/:id"
+              path="/projects/:id"
               element={
                 user ? (
                   <Layout>
@@ -121,7 +126,7 @@ function App() {
               }
             />
             <Route
-              path="/profissionais/:id"
+              path="/professionals/:id"
               element={
                 user ? (
                   <Layout>
@@ -132,8 +137,13 @@ function App() {
                 )
               }
             />
+            
+            {/* Portuguese aliases for detail pages */}
+            <Route path="/projetos/:id" element={<Navigate to="/projects/:id" replace />} />
+            <Route path="/profissionais/:id" element={<Navigate to="/professionals/:id" replace />} />
+            
             <Route
-              path="/perfil"
+              path="/profile"
               element={
                 user ? (
                   <Layout>
@@ -145,7 +155,7 @@ function App() {
               }
             />
             <Route
-              path="/configuracoes"
+              path="/settings"
               element={
                 user ? (
                   <Layout>
@@ -156,8 +166,10 @@ function App() {
                 )
               }
             />
+            <Route path="/configuracoes" element={<Navigate to="/settings" replace />} />
+            
             <Route
-              path="/propostas"
+              path="/proposals"
               element={
                 user ? (
                   <Layout>
@@ -168,8 +180,10 @@ function App() {
                 )
               }
             />
+            <Route path="/propostas" element={<Navigate to="/proposals" replace />} />
+            
             <Route
-              path="/meus-projetos"
+              path="/my-projects"
               element={
                 user ? (
                   <Layout>
@@ -180,8 +194,10 @@ function App() {
                 )
               }
             />
+            <Route path="/meus-projetos" element={<Navigate to="/my-projects" replace />} />
+            
             <Route
-              path="/propostas-recebidas"
+              path="/received-proposals"
               element={
                 user ? (
                   <Layout>
@@ -192,8 +208,10 @@ function App() {
                 )
               }
             />
+            <Route path="/propostas-recebidas" element={<Navigate to="/received-proposals" replace />} />
+            
             <Route
-              path="/criar-projeto"
+              path="/create-project"
               element={
                 user ? (
                   <Layout>
@@ -204,8 +222,10 @@ function App() {
                 )
               }
             />
+            <Route path="/criar-projeto" element={<Navigate to="/create-project" replace />} />
+            
             <Route
-              path="/criar-vaga"
+              path="/create-job"
               element={
                 user ? (
                   <Layout>
@@ -216,8 +236,10 @@ function App() {
                 )
               }
             />
+            <Route path="/criar-vaga" element={<Navigate to="/create-job" replace />} />
+            
             <Route
-              path="/notificacoes"
+              path="/notifications"
               element={
                 user ? (
                   <Layout>
@@ -228,6 +250,8 @@ function App() {
                 )
               }
             />
+            <Route path="/notificacoes" element={<Navigate to="/notifications" replace />} />
+            
             <Route
               path="/chat"
               element={

@@ -110,7 +110,7 @@ export function ProfessionalsPage() {
         onClose={() => setShowSidebar(false)}
         filters={filters}
         onFiltersChange={setFilters}
-        type="professionals"
+        type="profissionais"
       />
       
       {/* Main Content */}

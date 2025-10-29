@@ -1,28 +1,26 @@
 @echo off
 echo ========================================
-echo   GSEED PORTAL - DEPLOY TO VERCEL
+echo  GSEED PORTAL - DEPLOY AUTOMATICO
 echo ========================================
 echo.
 
-echo [1/5] Verificando status do Git...
-git status
-echo.
-
-echo [2/5] Adicionando arquivos modificados...
+echo [1/3] Adicionando alteracoes ao Git...
 git add .
-echo.
 
-echo [3/5] Criando commit...
-git commit -m "fix: corrigir erros TypeScript no build - ChatMessage e avaliacaoService"
 echo.
+echo [2/3] Criando commit...
+git commit -m "fix: adicionar campo professional_bio obrigatorio e novos campos profissionais - Sistema completo de skills, valores por hora, disponibilidade e bio profissional"
 
-echo [4/5] Enviando para GitHub...
-git push origin main
 echo.
+echo [3/3] Enviando para o GitHub...
+git push
 
-echo [5/5] Deploy concluido!
 echo.
-echo O Vercel detectara automaticamente o push e iniciara o deploy.
-echo Acesse: https://vercel.com/growthseed/gseed-portal
+echo ========================================
+echo  DEPLOY CONCLUIDO COM SUCESSO!
+echo ========================================
+echo.
+echo O Vercel vai detectar as mudancas e fazer o deploy automatico.
+echo Acompanhe em: https://vercel.com/
 echo.
 pause

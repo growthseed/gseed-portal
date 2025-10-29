@@ -19,7 +19,10 @@ import {
   Star,
   Image as ImageIcon,
   Award,
-  Loader2
+  Loader2,
+  DollarSign,
+  Clock,
+  X
 } from 'lucide-react';
 import { ImageUpload, MultipleImageUpload } from '../components/upload';
 import { supabase } from '../lib/supabase';
@@ -135,6 +138,16 @@ interface ProfileData {
   skills?: string[];
   portfolio_images?: string[];
   whatsapp?: string;
+  // Novos campos profissionais
+  professional_bio?: string;
+  hourly_rate?: number;
+  hourly_rate_min?: number;
+  hourly_rate_max?: number;
+  years_of_experience?: number;
+  availability?: 'freelance' | 'full_time' | 'part_time' | 'contract';
+  email_public?: string;
+  show_phone?: boolean;
+  show_email?: boolean;
 }
 
 interface Service {
@@ -158,6 +171,7 @@ export default function Perfil() {
   const [activeTab, setActiveTab] = useState<'info' | 'professional' | 'portfolio'>('info');
   const [services, setServices] = useState<Service[]>([]);
   const [newService, setNewService] = useState({ title: '', description: '', price: '' });
+  const [newSkill, setNewSkill] = useState('');
 
   useEffect(() => {
     loadProfile();
@@ -224,7 +238,17 @@ export default function Perfil() {
           gender: profileData.gender || null,
           skills: professionalData?.skills || [],
           whatsapp: professionalData?.whatsapp || profileData.phone,
-          portfolio_images: professionalData?.portfolio_images || []
+          portfolio_images: professionalData?.portfolio_images || [],
+          // Novos campos profissionais
+          professional_bio: professionalData?.professional_bio || '',
+          hourly_rate: professionalData?.hourly_rate,
+          hourly_rate_min: professionalData?.hourly_rate_min,
+          hourly_rate_max: professionalData?.hourly_rate_max,
+          years_of_experience: professionalData?.years_of_experience || 0,
+          availability: professionalData?.availability || 'freelance',
+          email_public: professionalData?.email_public,
+          show_phone: professionalData?.show_phone ?? false,
+          show_email: professionalData?.show_email ?? true
         });
 
         // Carregar serviços se for profissional
@@ -265,6 +289,10 @@ export default function Perfil() {
       if (!profile?.profession) newErrors.profession = 'Profissão é obrigatória';
       if (profile?.profession === 'Outros' && !profile?.customProfession?.trim()) {
         newErrors.customProfession = 'Especifique sua profissão';
+      }
+      // ✅ NOVO: Validar professional_bio obrigatório
+      if (!profile?.professional_bio?.trim()) {
+        newErrors.professional_bio = 'Bio profissional é obrigatória';
       }
     }
     
@@ -332,14 +360,24 @@ export default function Perfil() {
           .eq('user_id', profile.id)
           .maybeSingle();
 
+        // ✅ CORRIGIDO: Incluir professional_bio obrigatório
         const profData = {
           user_id: profile.id,
           title: profile.profession || '',
+          professional_bio: profile.professional_bio || '',  // ✅ ADICIONADO
           categories: profile.category ? [profile.category] : [],
           skills: profile.skills || [],
           portfolio_images: profile.portfolio_images || [],
           custom_profession: profile.profession === 'Outros' ? profile.customProfession : null,
-          whatsapp: profile.whatsapp
+          whatsapp: profile.whatsapp,
+          hourly_rate: profile.hourly_rate || null,
+          hourly_rate_min: profile.hourly_rate_min || null,
+          hourly_rate_max: profile.hourly_rate_max || null,
+          years_of_experience: profile.years_of_experience || 0,
+          availability: profile.availability || 'freelance',
+          email_public: profile.email_public || null,
+          show_phone: profile.show_phone ?? false,
+          show_email: profile.show_email ?? true
         };
 
         console.log('📤 Dados para professional_profiles:', profData);
@@ -486,6 +524,26 @@ export default function Perfil() {
       console.error('Erro ao remover serviço:', error);
       toast.error('Erro ao remover serviço');
     }
+  };
+
+  const addSkill = () => {
+    if (!newSkill.trim()) return;
+    if (profile?.skills?.includes(newSkill.trim())) {
+      toast.error('Essa habilidade já foi adicionada');
+      return;
+    }
+    setProfile({
+      ...profile!,
+      skills: [...(profile?.skills || []), newSkill.trim()]
+    });
+    setNewSkill('');
+  };
+
+  const removeSkill = (skill: string) => {
+    setProfile({
+      ...profile!,
+      skills: profile?.skills?.filter(s => s !== skill) || []
+    });
   };
 
   if (loading) {
@@ -832,7 +890,7 @@ export default function Perfil() {
                 {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp}</p>}
               </div>
 
-              {/* Membro ASDRM - Campo interno, não obrigatório */}
+              {/* Membro ASDRM */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -844,7 +902,7 @@ export default function Perfil() {
                 <label className="text-sm text-gray-700 dark:text-gray-300">Sou membro da ASDMR</label>
               </div>
 
-              {/* Bio */}
+              {/* Bio Pessoal */}
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
                   Sobre mim
@@ -872,7 +930,7 @@ export default function Perfil() {
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white flex items-center gap-2">
                   <Briefcase size={16} />
-                  Categoria Profissional {isProfessional && <span className="text-red-500">*</span>}
+                  Categoria Profissional <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={profile.category || ''}
@@ -896,7 +954,7 @@ export default function Perfil() {
               {profile.category && (
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-                    Profissão {isProfessional && <span className="text-red-500">*</span>}
+                    Profissão <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={profile.profession || ''}
@@ -919,7 +977,7 @@ export default function Perfil() {
               {profile.profession === 'Outros' && (
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-                    Especifique sua Profissão {isProfessional && <span className="text-red-500">*</span>}
+                    Especifique sua Profissão <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -934,6 +992,160 @@ export default function Perfil() {
                   {errors.customProfession && <p className="text-red-500 text-sm mt-1">{errors.customProfession}</p>}
                 </div>
               )}
+
+              {/* ✅ NOVO: Bio Profissional OBRIGATÓRIA */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
+                  Bio Profissional <span className="text-red-500">*</span>
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  Descreva sua experiência, formação e o que você faz profissionalmente
+                </p>
+                <textarea
+                  value={profile.professional_bio || ''}
+                  onChange={(e) => setProfile({ ...profile, professional_bio: e.target.value })}
+                  disabled={!editing}
+                  rows={5}
+                  placeholder="Ex: Sou desenvolvedor web com 5 anos de experiência em React, Node.js e TypeScript. Formado em Ciência da Computação, atuo criando soluções web modernas e escaláveis..."
+                  className={`w-full px-4 py-2 border ${
+                    errors.professional_bio ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-gray-600'
+                  } dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50`}
+                />
+                {errors.professional_bio && <p className="text-red-500 text-sm mt-1">{errors.professional_bio}</p>}
+              </div>
+
+              {/* ✅ NOVO: Anos de Experiência */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white flex items-center gap-2">
+                  <Clock size={16} />
+                  Anos de Experiência
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="50"
+                  value={profile.years_of_experience || 0}
+                  onChange={(e) => setProfile({ ...profile, years_of_experience: parseInt(e.target.value) || 0 })}
+                  disabled={!editing}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50"
+                />
+              </div>
+
+              {/* ✅ NOVO: Disponibilidade */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
+                  Disponibilidade
+                </label>
+                <select
+                  value={profile.availability || 'freelance'}
+                  onChange={(e) => setProfile({ ...profile, availability: e.target.value as any })}
+                  disabled={!editing}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50"
+                >
+                  <option value="freelance">Freelancer</option>
+                  <option value="full_time">Tempo Integral</option>
+                  <option value="part_time">Meio Período</option>
+                  <option value="contract">Contrato</option>
+                </select>
+              </div>
+
+              {/* ✅ NOVO: Valores */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white flex items-center gap-2">
+                  <DollarSign size={16} />
+                  Valores por Hora (R$)
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  Configure sua faixa de preço ou valor fixo
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={profile.hourly_rate_min || ''}
+                      onChange={(e) => setProfile({ ...profile, hourly_rate_min: parseFloat(e.target.value) || undefined })}
+                      disabled={!editing}
+                      placeholder="Mínimo"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={profile.hourly_rate_max || ''}
+                      onChange={(e) => setProfile({ ...profile, hourly_rate_max: parseFloat(e.target.value) || undefined })}
+                      disabled={!editing}
+                      placeholder="Máximo"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={profile.hourly_rate || ''}
+                      onChange={(e) => setProfile({ ...profile, hourly_rate: parseFloat(e.target.value) || undefined })}
+                      disabled={!editing}
+                      placeholder="Fixo"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* ✅ NOVO: Skills */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white flex items-center gap-2">
+                  <Award size={16} />
+                  Habilidades
+                </label>
+                
+                {profile.skills && profile.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {profile.skills.map((skill, idx) => (
+                      <div 
+                        key={idx} 
+                        className="flex items-center gap-1 px-3 py-1 bg-gseed-100 dark:bg-gseed-900/30 text-gseed-700 dark:text-gseed-300 rounded-full text-sm"
+                      >
+                        <span>{skill}</span>
+                        {editing && (
+                          <button
+                            onClick={() => removeSkill(skill)}
+                            className="hover:bg-gseed-200 dark:hover:bg-gseed-800 rounded-full p-0.5"
+                          >
+                            <X size={14} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {editing && (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newSkill}
+                      onChange={(e) => setNewSkill(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                      placeholder="Digite uma habilidade"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg"
+                    />
+                    <button
+                      onClick={addSkill}
+                      className="px-4 py-2 bg-gseed-500 text-white rounded-lg hover:bg-gseed-600 flex items-center gap-2"
+                    >
+                      <Plus size={16} />
+                      Adicionar
+                    </button>
+                  </div>
+                )}
+              </div>
 
               {/* Serviços */}
               <div>
